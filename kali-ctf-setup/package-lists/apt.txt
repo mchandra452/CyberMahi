@@ -1,0 +1,13 @@
+nmap
+netcat-traditional
+hydra
+gobuster
+john
+hashcat
+sqlmap
+enum4linux
+python3-pip
+pipx
+git
+vim
+tmux
