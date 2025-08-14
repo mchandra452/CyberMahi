@@ -8,6 +8,20 @@ This directory contains scripts and package lists to prepare a fresh Kali Linux 
 - `package-lists/` – Text files containing packages for APT, `pipx`, and Ruby gems.
 - `scripts/` – Additional helper and post-install scripts.
 
+## Default Tools
+
+The package lists include commonly used utilities for CTF competitions, such as:
+
+- **Enumeration:** nmap, masscan, rustscan, nikto, gobuster
+- **Web:** sqlmap, burpsuite, wfuzz, xsser
+- **Cracking:** hydra, john, hashcat
+- **Binary/RE:** gdb, radare2, ghidra, apktool, dex2jar, ropgadget
+- **Wireless:** aircrack-ng, reaver, kismet
+- **Forensics:** binwalk, volatility, foremost
+- **Utilities:** git, vim, tmux, zsh
+
+Python tools like `pwntools`, `impacket`, `ropgadget`, and `scapy` are installed with `pipx`.
+
 ## Usage
 
 1. **Review and modify package lists** in `package-lists/` to suit your needs.
