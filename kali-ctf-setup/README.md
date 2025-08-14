@@ -22,6 +22,44 @@ The package lists include commonly used utilities for CTF competitions, such as:
 
 Python tools like `pwntools`, `impacket`, `ropgadget`, and `scapy` are installed with `pipx`.
 
+## Full Scanner Setup
+
+On Kali Linux or Parrot OS, the `install-tools` function provisions a wide range of open-source scanners and utilities, including:
+
+- nmap
+- masscan
+- rustscan
+- nikto
+- gobuster
+- sqlmap
+- wfuzz
+- xsser
+- hydra
+- john
+- hashcat
+- gdb
+- radare2
+- ghidra
+- apktool
+- dex2jar
+- ropgadget
+- aircrack-ng
+- reaver
+- kismet
+- binwalk
+- volatility
+- foremost
+- git
+- vim
+- tmux
+- zsh
+
+To install the full suite, run:
+
+```bash
+bash ctf_codex_companion.sh install-tools
+```
+
 ## Usage
 
 1. **Review and modify package lists** in `package-lists/` to suit your needs.
@@ -31,6 +69,11 @@ Python tools like `pwntools`, `impacket`, `ropgadget`, and `scapy` are installed
    ./setup.sh
    ```
 3. **Log out and back in** or source your shell configuration (`source ~/.bashrc`) to apply changes.
+
+## Troubleshooting
+
+- **No sudo privileges:** The scripts rely on `sudo` to install packages. Run as root or obtain administrative access before executing them.
+- **Non-Debian systems:** These scripts target Debian-based distributions like Kali and Parrot. On other systems, adapt the package manager commands and install equivalents manually.
 
 ## Disclaimer
 
