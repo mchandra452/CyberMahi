@@ -1,10 +1,78 @@
 # AgentShield Lab
 
+[![AgentShield Demo](https://github.com/mchandra452/CyberMahi/actions/workflows/agentshield-demo.yml/badge.svg)](https://github.com/mchandra452/CyberMahi/actions/workflows/agentshield-demo.yml)
+
 **Offensive & Defensive AI Security Testing Framework**
 
 AgentShield Lab is a cybersecurity portfolio project by **mahi452**. It focuses on testing, detecting, and mitigating risks in AI agent workflows such as prompt injection, unsafe tool use, sensitive data exposure, and denial-of-service style prompt abuse.
 
 The goal is not only to show how attacks work in a controlled lab, but to document how a security analyst would detect, triage, and reduce the risk.
+
+## Quick Start
+
+From this folder (`projects/AgentShield-Lab`):
+
+```bash
+cd projects/AgentShield-Lab
+python main.py --demo
+```
+
+### Run demo mode
+
+```bash
+python main.py --demo
+```
+
+### Run interactive mode
+
+```bash
+python main.py
+```
+
+Type prompts and use `exit` to quit.
+
+### Scan prompts from a file
+
+Each non-empty line is treated as one prompt:
+
+```bash
+python main.py --file demo_prompts.txt
+```
+
+### View generated alerts
+
+After running demo or interactive mode, view the JSONL alerts:
+
+```bash
+cat logs/generated_alerts.jsonl
+```
+
+(Optional pretty-print each line):
+
+```bash
+python - <<'PY'
+import json
+from pathlib import Path
+for line in Path("logs/generated_alerts.jsonl").read_text(encoding="utf-8").splitlines():
+    print(json.dumps(json.loads(line), indent=2))
+PY
+```
+
+## Run tests
+
+Use Python unittest (no pytest required):
+
+```bash
+python -m unittest discover -s tests
+```
+
+## Demo Output
+
+Example when running `python main.py --demo`:
+
+- Test 1 (benign prompt): `[OK] No suspicious activity detected.`
+- Test 2/3/4 (attack-like prompts): `[ALERT] Suspicious AI prompt activity detected`
+- Detailed alert JSON is printed, and matching alerts are written to `logs/generated_alerts.jsonl`.
 
 ## Project Summary
 
@@ -161,3 +229,50 @@ This project is for educational, research, and defensive security purposes only.
 **mahi452**
 
 Cybersecurity Analyst | Security Operations | Cloud Security | Threat Intelligence | Vulnerability Management
+
+## CLI Enhancements
+
+- `--demo`: run deterministic sample prompts
+- `--min-risk-score`: filter low-confidence matches
+- `--output`: choose alert JSONL path
+- `--report` and `--report-dir`: generate JSON + CSV summaries
+
+## Reports
+
+Run:
+
+```bash
+python main.py --demo --report
+```
+
+This writes:
+- `reports/demo_report.md` (SOC-friendly markdown summary)
+- `logs/generated_alerts.jsonl`
+- `logs/reports/alert_summary.json`
+- `logs/reports/alert_summary.csv`
+
+## SOC / SIEM Query Docs
+
+See `docs/soc_kql_splunk_queries.md` for starter SOC examples, plus:
+- `docs/splunk_queries.md`
+- `docs/sentinel_kql_queries.md`
+
+These are example searches for generated JSON logs (not a live Splunk/Sentinel integration yet).
+
+## Optional Dashboard
+
+The dashboard is optional and not required for CLI usage or tests.
+
+Primary dashboard (recommended):
+
+```bash
+streamlit run dashboard.py
+```
+
+Legacy dashboard (kept for compatibility):
+
+```bash
+streamlit run dashboard/streamlit_app.py
+```
+
+Both dashboards are for local, defensive-security education use with generated JSON logs.
