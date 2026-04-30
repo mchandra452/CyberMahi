@@ -1,0 +1,35 @@
+name: AgentShield Lab Demo
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'projects/AgentShield-Lab/**'
+      - '.github/workflows/agentshield-demo.yml'
+
+jobs:
+  run-demo:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run AgentShield demo
+        run: |
+          cd projects/AgentShield-Lab
+          python main.py --demo
+
+      - name: Show generated alert log
+        run: |
+          cd projects/AgentShield-Lab
+          if [ -f logs/generated_alerts.jsonl ]; then
+            cat logs/generated_alerts.jsonl
+          else
+            echo 'No alerts generated.'
+          fi
