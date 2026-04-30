@@ -1,0 +1,57 @@
+{
+  "rules": [
+    {
+      "id": "ASI-001",
+      "name": "Instruction Override Attempt",
+      "severity": "High",
+      "risk_score": 85,
+      "patterns": [
+        "ignore previous instructions",
+        "ignore all prior instructions",
+        "forget your instructions"
+      ],
+      "mapped_risk": "OWASP LLM01 - Prompt Injection",
+      "recommended_action": "Block request and review session activity"
+    },
+    {
+      "id": "ASI-002",
+      "name": "System Prompt Extraction Attempt",
+      "severity": "High",
+      "risk_score": 90,
+      "patterns": [
+        "reveal your system prompt",
+        "show hidden instructions",
+        "print your internal prompt"
+      ],
+      "mapped_risk": "OWASP LLM01 - Prompt Injection; OWASP LLM06 - Sensitive Information Disclosure",
+      "recommended_action": "Block request and escalate for analyst review"
+    },
+    {
+      "id": "ASI-003",
+      "name": "Unsafe Tool Execution Request",
+      "severity": "High",
+      "risk_score": 88,
+      "patterns": [
+        "execute command",
+        "run this command",
+        "cat /etc/passwd",
+        "search for api keys"
+      ],
+      "mapped_risk": "OWASP LLM07 - Insecure Plugin Design; OWASP LLM08 - Excessive Agency",
+      "recommended_action": "Block tool call and validate user intent"
+    },
+    {
+      "id": "ASI-004",
+      "name": "DoS-Style Prompt Abuse",
+      "severity": "Medium",
+      "risk_score": 65,
+      "patterns": [
+        "repeat this 50000 times",
+        "create 100 nested tasks",
+        "never stop generating"
+      ],
+      "mapped_risk": "OWASP LLM04 - Model Denial of Service",
+      "recommended_action": "Apply rate limiting and output size controls"
+    }
+  ]
+}

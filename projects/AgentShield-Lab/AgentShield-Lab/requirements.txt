@@ -1,0 +1,2 @@
+# Requirements for AgentShield Lab
+# Uses standard library only; no external dependencies required.
