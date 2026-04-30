@@ -4,3 +4,5 @@ requests
 impacket
 ropgadget
 scapy
+wfuzz
+dirsearch
