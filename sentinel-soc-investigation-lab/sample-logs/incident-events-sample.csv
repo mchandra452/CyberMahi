@@ -1,0 +1,7 @@
+Timestamp,EventID,Source,User,IPAddress,EventDescription,Severity,InvestigationNote
+2026-05-05T07:47:31Z,EVT-1001,EmailEvents,emma.wilson@northbridge-demo.local,185.224.128.44,Suspicious phishing-themed email delivered,Medium,User later reported message as suspicious
+2026-05-05T07:52:10Z,EVT-1002,SigninLogs,emma.wilson@northbridge-demo.local,185.224.128.44,Failed sign-in attempt 1 from unusual country,Medium,Beginning of failure burst
+2026-05-05T08:01:18Z,EVT-1003,SigninLogs,emma.wilson@northbridge-demo.local,185.224.128.44,Failed sign-in threshold exceeded (5 failures),High,Trigger brute-force analytic rule
+2026-05-05T08:05:54Z,EVT-1004,SigninLogs,emma.wilson@northbridge-demo.local,185.224.128.44,Successful sign-in after repeated failures,High,Potential credential compromise indicator
+2026-05-05T08:09:30Z,EVT-1005,SecurityAlert,emma.wilson@northbridge-demo.local,185.224.128.44,Correlated alert created for phishing + suspicious login,High,Escalate to SOC investigator
+2026-05-05T08:25:00Z,EVT-1006,SecurityIncident,emma.wilson@northbridge-demo.local,185.224.128.44,Incident opened and containment initiated,High,Password reset and session revocation recommended

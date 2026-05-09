@@ -1,0 +1,13 @@
+// Possible impossible travel: same user signs in from different countries within short interval
+SigninLogs
+| where TimeGenerated > ago(2d)
+| where ResultType == 0
+| project UserPrincipalName, TimeGenerated, Country=tostring(Location), IPAddress
+| order by UserPrincipalName asc, TimeGenerated asc
+| serialize
+| extend PrevUser = prev(UserPrincipalName), PrevCountry = prev(Country), PrevTime = prev(TimeGenerated)
+| where UserPrincipalName == PrevUser and Country != PrevCountry
+| extend MinutesBetween = datetime_diff("minute", TimeGenerated, PrevTime)
+| where MinutesBetween <= 120 and MinutesBetween >= 0
+| project UserPrincipalName, PrevTime, TimeGenerated, PrevCountry, Country, MinutesBetween, IPAddress
+| order by TimeGenerated desc

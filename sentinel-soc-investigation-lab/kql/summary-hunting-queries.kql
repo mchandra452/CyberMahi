@@ -1,0 +1,24 @@
+// 1) Email threat summary
+EmailEvents
+| where TimeGenerated > ago(7d)
+| summarize Count=count() by ThreatType, DeliveryAction
+| order by Count desc;
+
+// 2) Incident timeline reconstruction from incident table
+SecurityIncident
+| where TimeGenerated > ago(7d)
+| project TimeGenerated, IncidentNumber, Title, Severity, Status, Owner
+| order by TimeGenerated asc;
+
+// 3) Risky user summary
+SigninLogs
+| where TimeGenerated > ago(7d)
+| summarize Attempts=count(), Failures=countif(ResultType != 0), Successes=countif(ResultType == 0) by UserPrincipalName, RiskLevel
+| order by Failures desc;
+
+// 4) IP address investigation pivot (replace sample IP)
+let suspiciousIP = "185.224.128.44";
+SigninLogs
+| where IPAddress == suspiciousIP
+| project TimeGenerated, UserPrincipalName, IPAddress, Location, ResultType, AppDisplayName
+| order by TimeGenerated desc
