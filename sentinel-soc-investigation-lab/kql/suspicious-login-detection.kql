@@ -1,0 +1,14 @@
+// Suspicious successful login from unusual location compared to last 14 days baseline
+let lookback = 14d;
+let baseline =
+    SigninLogs
+    | where TimeGenerated between (ago(lookback) .. ago(1d))
+    | summarize KnownLocations = make_set(Location, 50) by UserPrincipalName;
+SigninLogs
+| where TimeGenerated > ago(1d)
+| where ResultType == 0
+| join kind=leftouter baseline on UserPrincipalName
+| extend IsUnusualLocation = iff(isempty(KnownLocations) or Location !in (KnownLocations), true, false)
+| where IsUnusualLocation == true
+| project TimeGenerated, UserPrincipalName, IPAddress, Location, AppDisplayName, RiskLevel, ConditionalAccessStatus
+| order by TimeGenerated desc

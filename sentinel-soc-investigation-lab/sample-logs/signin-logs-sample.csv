@@ -1,0 +1,11 @@
+Timestamp,UserPrincipalName,IPAddress,Location,ResultType,ResultDescription,AppDisplayName,DeviceDetail,RiskLevel,ConditionalAccessStatus
+2026-05-05T07:52:10Z,emma.wilson@northbridge-demo.local,185.224.128.44,Netherlands,50126,Invalid username or password,Microsoft 365 Exchange Online,Windows 11 Chrome,Medium,Failure
+2026-05-05T07:54:22Z,emma.wilson@northbridge-demo.local,185.224.128.44,Netherlands,50126,Invalid username or password,Microsoft 365 Exchange Online,Windows 11 Chrome,Medium,Failure
+2026-05-05T07:56:13Z,emma.wilson@northbridge-demo.local,185.224.128.44,Netherlands,50126,Invalid username or password,Microsoft 365 Exchange Online,Windows 11 Chrome,Medium,Failure
+2026-05-05T07:58:49Z,emma.wilson@northbridge-demo.local,185.224.128.44,Netherlands,50126,Invalid username or password,Microsoft 365 Exchange Online,Windows 11 Chrome,High,Failure
+2026-05-05T08:01:18Z,emma.wilson@northbridge-demo.local,185.224.128.44,Netherlands,50126,Invalid username or password,Microsoft 365 Exchange Online,Windows 11 Chrome,High,Failure
+2026-05-05T08:05:54Z,emma.wilson@northbridge-demo.local,185.224.128.44,Netherlands,0,Success,Microsoft 365 Exchange Online,Windows 11 Chrome,High,Success
+2026-05-05T08:08:42Z,emma.wilson@northbridge-demo.local,185.224.128.44,Netherlands,0,Success,Microsoft Teams,Windows 11 Chrome,High,Success
+2026-05-05T08:42:04Z,liam.patel@northbridge-demo.local,81.2.69.10,United Kingdom,0,Success,Microsoft 365 SharePoint Online,Windows 10 Edge,Low,Success
+2026-05-05T09:11:37Z,sophia.khan@northbridge-demo.local,81.2.69.21,United Kingdom,50140,User account risk blocked sign-in,Microsoft 365 Exchange Online,macOS Safari,Medium,Failure
+2026-05-05T09:16:09Z,sophia.khan@northbridge-demo.local,81.2.69.21,United Kingdom,0,Success,Microsoft 365 Exchange Online,macOS Safari,Low,Success

@@ -1,0 +1,19 @@
+// Detect failed login bursts and successful login shortly after failures
+let failureWindow = 15m;
+let failureThreshold = 5;
+let failures =
+SigninLogs
+| where TimeGenerated > ago(1d)
+| where ResultType != 0
+| summarize FailedCount = count(), FirstFailure=min(TimeGenerated), LastFailure=max(TimeGenerated) by UserPrincipalName, IPAddress, bin(TimeGenerated, failureWindow)
+| where FailedCount >= failureThreshold;
+let successes =
+SigninLogs
+| where TimeGenerated > ago(1d)
+| where ResultType == 0
+| project SuccessTime=TimeGenerated, UserPrincipalName, IPAddress, Location, AppDisplayName;
+failures
+| join kind=leftouter successes on UserPrincipalName, IPAddress
+| where SuccessTime between (LastFailure .. LastFailure + 30m)
+| project UserPrincipalName, IPAddress, FailedCount, FirstFailure, LastFailure, SuccessTime, Location, AppDisplayName
+| order by LastFailure desc
