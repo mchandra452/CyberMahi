@@ -1,0 +1,8 @@
+// Detect suspicious phishing-themed emails and URLs
+EmailEvents
+| where TimeGenerated > ago(7d)
+| where Subject has_any ("verify", "password", "urgent", "security alert", "M365")
+    or URL has_any ("login", "verify", "secure")
+    or ThreatType has_any ("Phish", "Malware")
+| project TimeGenerated, Recipient, SenderFromAddress, SenderMailFromDomain, Subject, URL, ThreatType, DeliveryAction, DetectionMethods
+| order by TimeGenerated desc

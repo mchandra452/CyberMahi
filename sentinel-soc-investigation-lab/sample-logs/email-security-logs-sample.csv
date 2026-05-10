@@ -1,0 +1,5 @@
+Timestamp,Recipient,Sender,SenderDomain,Subject,URL,AttachmentName,ThreatType,DeliveryAction,DetectionSource
+2026-05-05T07:47:31Z,emma.wilson@northbridge-demo.local,security-update@example.com,example.com,Action required: Verify your Microsoft 365 account,https://phishing-demo.local/m365-verify,,Phish,Delivered to Inbox,Defender for Office 365
+2026-05-05T07:49:02Z,emma.wilson@northbridge-demo.local,security-update@example.com,example.com,Urgent security verification request,https://phishing-demo.local/secure-login,,Phish,User reported,User Submission
+2026-05-05T08:55:20Z,liam.patel@northbridge-demo.local,it-news@northbridge-demo.local,northbridge-demo.local,Monthly IT service bulletin,https://northbridge-demo.local/news,,Benign,Delivered to Inbox,Mail Flow
+2026-05-05T09:02:54Z,sophia.khan@northbridge-demo.local,shared-docs@example.com,example.com,Please review shared document,https://example.com/collab,invoice.zip,Spam,Junked,Defender for Office 365
