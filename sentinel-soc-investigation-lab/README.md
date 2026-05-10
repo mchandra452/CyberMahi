@@ -131,3 +131,45 @@ python3 tests/validate_lab.py
 
 ## 18) Defensive Use Disclaimer
 This repository is for defensive cybersecurity learning and job-portfolio use only. All logs are simulated. No malware, credential stealing tooling, or offensive attack instructions are included.
+
+
+## 19) Project Status
+- Current status: **Portfolio-ready for UK SOC Analyst Level 1 applications**
+- Validation: runnable local integrity checks via `python3 tests/validate_lab.py`
+- Details: `docs/project-status.md`
+
+## 20) Working vs Simulated
+### Working in this repository
+- Structured SOC investigation artefacts and reporting templates
+- KQL query pack with commented detection logic
+- Sample logs validated for schema, timestamps, and safe domains
+- Offline validation script for consistency checks
+
+### Simulated / requires your own lab
+- Live Sentinel ingestion and query execution depend on your Azure workspace
+- Screenshots must be captured in your own environment
+- Incident telemetry is fictional for defensive training
+
+## 21) Verification Checklist
+1. Run local validator: `python3 tests/validate_lab.py`
+2. Confirm all checks show `[PASS]`
+3. (Optional) Import CSVs into Sentinel custom tables
+4. Run KQL queries in the documented order
+5. Update incident report with your observed outputs
+
+## 22) Recruiter/Analyst Support Docs
+- `docs/project-status.md`
+- `docs/troubleshooting.md`
+- `docs/escalation-decision-tree.md`
+- `docs/false-positive-handling.md`
+- `docs/demo-walkthrough.md`
+
+## 23) Screenshot Checklist (capture next)
+- Sentinel workspace overview
+- Data connector / custom table ingestion status
+- Failed login burst query results
+- Suspicious location login query results
+- Phishing indicator query results
+- Incident timeline/correlation evidence
+- MITRE ATT&CK mapping section
+- Final incident report summary
