@@ -1,6 +1,6 @@
 # Microsoft Sentinel SOC Investigation Lab - Suspicious Login and Phishing Alert Analysis
 
-## 1) Recruiter-Friendly Summary
+## 1) Friendly Summary
 A practical SOC Analyst Level 1 portfolio project simulating a realistic Microsoft Sentinel investigation. The case combines suspicious sign-ins and phishing telemetry to demonstrate triage, KQL investigation, MITRE ATT&CK mapping, escalation judgement, and concise analyst reporting.
 
 ## 2) Scenario
