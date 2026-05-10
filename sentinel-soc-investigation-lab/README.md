@@ -90,5 +90,20 @@ I used KQL to triage failed login bursts, unusual successful sign-ins, and phish
 
 I built this as a defensive portfolio project for SOC Analyst / Security Analyst applications. Feedback is welcome.
 
-## 16) Defensive Use Disclaimer
+
+## 17) Run and Test This Project
+### Quick validation (offline)
+Run the built-in validator to confirm file presence, CSV schema correctness, timestamp format, and safe-domain usage:
+
+```bash
+python3 tests/validate_lab.py
+```
+
+### Sentinel execution workflow
+1. Import sample CSV data into custom Log Analytics tables (or map to your existing schema).
+2. Open each query in `kql/` and adjust table/field names if required.
+3. Execute detections, save results, and capture evidence screenshots.
+4. Update `incident-report.md` with your run-specific findings.
+
+## 18) Defensive Use Disclaimer
 This repository is for defensive cybersecurity learning and job-portfolio use only. All logs are simulated. No malware, credential stealing tooling, or offensive attack instructions are included.
