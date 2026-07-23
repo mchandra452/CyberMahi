@@ -1,0 +1,38 @@
+id: DET007
+name: Cloud Download Anomaly
+status: test
+description: Detects cloud file download volume materially above a user's static baseline.
+author: Mahi
+date_created: "2026-07-23"
+date_modified: "2026-07-23"
+severity: medium
+severity_rationale: Material deviation from a download baseline warrants investigation, but business bulk access can produce the same volume.
+confidence: medium
+confidence_rationale: The count threshold and user baseline are explicit, while static baselines lack seasonality, sensitivity, and change context.
+data_sources: [Microsoft 365 OfficeActivity, static user baseline]
+query_file: detections/kql/DET007-cloud-download-anomaly.kql
+query_frequency: 1h
+query_period: 1d
+trigger_operator: greater_than_or_equal
+trigger_threshold: 1
+entity_mappings: [Account.UserId, IP.Address]
+attack:
+  - technique: T1530
+    evidence: Anomalous downloads provide possible cloud collection evidence in the correlated chain.
+    confidence: medium
+    status: inferred
+    additional_evidence: File sensitivity, destination, intent, and exfiltration evidence are required.
+false_positives: [Backups, migrations, eDiscovery, legal export, short baseline]
+tuning: Exclude governed bulk processes and use seasonality-aware production baselines.
+investigation_steps: [Review file sensitivity, client, IP, process identity, and approved change records.]
+response_actions: [Restrict access only after confirming unauthorised collection.]
+test_cases:
+  - name: unusual user download burst
+    type: malicious
+    expected: alert
+    event_ids: [E-CLOUD-003, E-CLOUD-004, E-CLOUD-005, E-CLOUD-006, E-CLOUD-007, E-CLOUD-008, E-CLOUD-009, E-CLOUD-010, E-CLOUD-011]
+  - name: approved backup downloads
+    type: benign
+    expected: suppressed
+    event_ids: [E-CLOUD-021, E-CLOUD-022, E-CLOUD-023, E-CLOUD-024, E-CLOUD-025, E-CLOUD-026, E-CLOUD-027, E-CLOUD-028, E-CLOUD-029, E-CLOUD-030]
+limitations: Static baseline does not model seasonality or file sensitivity.

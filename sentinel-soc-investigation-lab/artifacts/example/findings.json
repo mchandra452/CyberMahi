@@ -1,0 +1,346 @@
+[
+  {
+    "Category": "email",
+    "Confidence": "high",
+    "DetectionId": "DET004",
+    "Entities": {
+      "Account": [
+        "analyst1@northbridge.example"
+      ],
+      "Domain": [
+        "microsoft-auth-check.example"
+      ],
+      "URL": [
+        "https://microsoft-auth-check.example/review"
+      ]
+    },
+    "EventIds": [
+      "E-EMAIL-001"
+    ],
+    "Evidence": "Delivered message has display-name mismatch and safe suspicious URL domain microsoft-auth-check.example",
+    "FindingId": "F-DET004-0001",
+    "Name": "Phishing-Link Indicators",
+    "Scope": "correlated_incident_evidence",
+    "Severity": "medium",
+    "Synthetic": true,
+    "Timestamp": "2025-02-18T08:55:00Z"
+  },
+  {
+    "Category": "authentication",
+    "Confidence": "high",
+    "DetectionId": "DET001",
+    "Entities": {
+      "Account": [
+        "analyst1@northbridge.example",
+        "finance1@northbridge.example",
+        "hr1@northbridge.example",
+        "ops1@northbridge.example"
+      ],
+      "IP": [
+        "203.0.113.50"
+      ]
+    },
+    "EventIds": [
+      "E-AUTH-001",
+      "E-AUTH-002",
+      "E-AUTH-003",
+      "E-AUTH-004",
+      "E-AUTH-005",
+      "E-AUTH-006"
+    ],
+    "Evidence": "6 failures against 4 accounts from 203.0.113.50",
+    "FindingId": "F-DET001-0001",
+    "Name": "Password Spray Across Cloud Accounts",
+    "Scope": "correlated_incident_evidence",
+    "Severity": "medium",
+    "Synthetic": true,
+    "Timestamp": "2025-02-18T09:10:00Z"
+  },
+  {
+    "Category": "authentication",
+    "Confidence": "high",
+    "DetectionId": "DET002",
+    "Entities": {
+      "Account": [
+        "analyst1@northbridge.example"
+      ],
+      "IP": [
+        "203.0.113.50"
+      ]
+    },
+    "EventIds": [
+      "E-AUTH-001",
+      "E-AUTH-002",
+      "E-AUTH-006",
+      "E-AUTH-007"
+    ],
+    "Evidence": "Successful sign-in followed 3 failures for analyst1@northbridge.example",
+    "FindingId": "F-DET002-0001",
+    "Name": "Successful Authentication After Failure Burst",
+    "Scope": "correlated_incident_evidence",
+    "Severity": "high",
+    "Synthetic": true,
+    "Timestamp": "2025-02-18T09:12:00Z"
+  },
+  {
+    "Category": "authentication",
+    "Confidence": "medium",
+    "DetectionId": "DET003",
+    "Entities": {
+      "Account": [
+        "analyst1@northbridge.example"
+      ],
+      "Host": [
+        "NFS-UNKNOWN-77"
+      ],
+      "IP": [
+        "203.0.113.50"
+      ]
+    },
+    "EventIds": [
+      "E-AUTH-007"
+    ],
+    "Evidence": "Authentication context differs from baseline: new country, new device, elevated risk",
+    "FindingId": "F-DET003-0001",
+    "Name": "Unusual Authentication Context",
+    "Scope": "correlated_incident_evidence",
+    "Severity": "medium",
+    "Synthetic": true,
+    "Timestamp": "2025-02-18T09:12:00Z"
+  },
+  {
+    "Category": "cloud_application",
+    "Confidence": "medium",
+    "DetectionId": "DET005",
+    "Entities": {
+      "Account": [
+        "analyst1@northbridge.example"
+      ],
+      "Application": [
+        "Document Workflow Helper"
+      ],
+      "ApplicationId": [
+        "00000000-0000-4000-8000-000000000501"
+      ],
+      "IP": [
+        "203.0.113.50"
+      ]
+    },
+    "EventIds": [
+      "E-CLOUD-001"
+    ],
+    "Evidence": "First-seen application received high-impact scopes: Files.ReadWrite.All, Mail.ReadWrite, offline_access",
+    "FindingId": "F-DET005-0001",
+    "Name": "Suspicious OAuth Consent",
+    "Scope": "correlated_incident_evidence",
+    "Severity": "high",
+    "Synthetic": true,
+    "Timestamp": "2025-02-18T09:20:00Z"
+  },
+  {
+    "Category": "mailbox",
+    "Confidence": "high",
+    "DetectionId": "DET006",
+    "Entities": {
+      "Account": [
+        "analyst1@northbridge.example"
+      ],
+      "IP": [
+        "203.0.113.50"
+      ],
+      "Mailbox": [
+        "analyst1@northbridge.example"
+      ]
+    },
+    "EventIds": [
+      "E-CLOUD-002"
+    ],
+    "Evidence": "Mailbox forwarding was configured to external domain external-archive.example",
+    "FindingId": "F-DET006-0001",
+    "Name": "External Mail Forwarding Rule",
+    "Scope": "correlated_incident_evidence",
+    "Severity": "high",
+    "Synthetic": true,
+    "Timestamp": "2025-02-18T09:28:00Z"
+  },
+  {
+    "Category": "cloud_storage",
+    "Confidence": "medium",
+    "DetectionId": "DET007",
+    "Entities": {
+      "Account": [
+        "analyst1@northbridge.example"
+      ],
+      "IP": [
+        "203.0.113.50"
+      ]
+    },
+    "EventIds": [
+      "E-CLOUD-003",
+      "E-CLOUD-004",
+      "E-CLOUD-005",
+      "E-CLOUD-006",
+      "E-CLOUD-007",
+      "E-CLOUD-008",
+      "E-CLOUD-009",
+      "E-CLOUD-010",
+      "E-CLOUD-011"
+    ],
+    "Evidence": "9 downloads exceed static daily baseline of 3 for analyst1@northbridge.example",
+    "FindingId": "F-DET007-0001",
+    "Name": "Cloud Download Anomaly",
+    "Scope": "correlated_incident_evidence",
+    "Severity": "medium",
+    "Synthetic": true,
+    "Timestamp": "2025-02-18T09:43:00Z"
+  },
+  {
+    "Category": "endpoint",
+    "Confidence": "high",
+    "DetectionId": "DET008",
+    "Entities": {
+      "Account": [
+        "analyst1@northbridge.example"
+      ],
+      "Host": [
+        "NFS-LT-104"
+      ],
+      "Process": [
+        "powershell.exe",
+        "winword.exe"
+      ]
+    },
+    "EventIds": [
+      "E-END-001"
+    ],
+    "Evidence": "Office parent created a PowerShell child; command line is inert and redacted",
+    "FindingId": "F-DET008-0001",
+    "Name": "Office Application Spawning PowerShell",
+    "Scope": "correlated_incident_evidence",
+    "Severity": "high",
+    "Synthetic": true,
+    "Timestamp": "2025-02-18T09:50:00Z"
+  },
+  {
+    "Category": "network",
+    "Confidence": "medium",
+    "DetectionId": "DET009",
+    "Entities": {
+      "Account": [
+        "analyst1@northbridge.example"
+      ],
+      "Domain": [
+        "update-cdn.test"
+      ],
+      "Host": [
+        "NFS-LT-104"
+      ]
+    },
+    "EventIds": [
+      "E-DNS-001"
+    ],
+    "Evidence": "Domain update-cdn.test is new or rare for the device; novelty alone is not malicious",
+    "FindingId": "F-DET009-0001",
+    "Name": "New or Rare Domain DNS Activity",
+    "Scope": "correlated_incident_evidence",
+    "Severity": "low",
+    "Synthetic": true,
+    "Timestamp": "2025-02-18T09:52:00Z"
+  },
+  {
+    "Category": "network",
+    "Confidence": "medium",
+    "DetectionId": "DET009",
+    "Entities": {
+      "Account": [
+        "sales1@northbridge.example"
+      ],
+      "Domain": [
+        "new-crm.test"
+      ],
+      "Host": [
+        "NFS-LT-109"
+      ]
+    },
+    "EventIds": [
+      "E-DNS-002"
+    ],
+    "Evidence": "Domain new-crm.test is new or rare for the device; novelty alone is not malicious",
+    "FindingId": "F-DET009-0002",
+    "Name": "New or Rare Domain DNS Activity",
+    "Scope": "standalone_detection_regression",
+    "Severity": "low",
+    "Synthetic": true,
+    "Timestamp": "2025-02-18T11:30:00Z"
+  },
+  {
+    "Category": "incident_fusion",
+    "Confidence": "high",
+    "DetectionId": "DET010",
+    "Entities": {
+      "Account": [
+        "analyst1@northbridge.example",
+        "finance1@northbridge.example",
+        "hr1@northbridge.example",
+        "ops1@northbridge.example"
+      ],
+      "Application": [
+        "Document Workflow Helper"
+      ],
+      "ApplicationId": [
+        "00000000-0000-4000-8000-000000000501"
+      ],
+      "Domain": [
+        "microsoft-auth-check.example",
+        "update-cdn.test"
+      ],
+      "Host": [
+        "NFS-LT-104",
+        "NFS-UNKNOWN-77"
+      ],
+      "IP": [
+        "203.0.113.50"
+      ],
+      "Mailbox": [
+        "analyst1@northbridge.example"
+      ],
+      "Process": [
+        "powershell.exe",
+        "winword.exe"
+      ],
+      "URL": [
+        "https://microsoft-auth-check.example/review"
+      ]
+    },
+    "EventIds": [
+      "E-AUTH-001",
+      "E-AUTH-002",
+      "E-AUTH-003",
+      "E-AUTH-004",
+      "E-AUTH-005",
+      "E-AUTH-006",
+      "E-AUTH-007",
+      "E-CLOUD-001",
+      "E-CLOUD-002",
+      "E-CLOUD-003",
+      "E-CLOUD-004",
+      "E-CLOUD-005",
+      "E-CLOUD-006",
+      "E-CLOUD-007",
+      "E-CLOUD-008",
+      "E-CLOUD-009",
+      "E-CLOUD-010",
+      "E-CLOUD-011",
+      "E-DNS-001",
+      "E-EMAIL-001",
+      "E-END-001"
+    ],
+    "Evidence": "Correlated 9 unique detections into risk score 99",
+    "FindingId": "F-DET010-0001",
+    "Name": "Identity-Led Incident Fusion",
+    "Scope": "incident_fusion",
+    "Severity": "high",
+    "Synthetic": true,
+    "Timestamp": "2025-02-18T09:52:00Z"
+  }
+]

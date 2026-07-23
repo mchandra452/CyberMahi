@@ -1,0 +1,22 @@
+// DET009: domain absent from a 30-day device baseline and rare in the detection window.
+// New does not mean malicious; updates, CDNs, and newly onboarded SaaS are expected noise.
+let DetectionId = "DET009";
+let DetectionWindow = 1d;
+let BaselineWindow = 30d;
+let MaximumCurrentCount = 2;
+let Baseline = DeviceNetworkEvents
+| where Timestamp between (ago(BaselineWindow) .. ago(DetectionWindow))
+| where ActionType == "DnsConnectionInspected"
+| extend Domain=tolower(trim_end(@"\.$", tostring(RemoteUrl)))
+| where isnotempty(Domain)
+| summarize by DeviceId, Domain;
+DeviceNetworkEvents
+| where Timestamp > ago(DetectionWindow)
+| where ActionType == "DnsConnectionInspected" and isnotempty(RemoteUrl)
+| extend Domain=tolower(trim_end(@"\.$", tostring(RemoteUrl)))
+| summarize QueryCount=count(), Timestamp=max(Timestamp), IPAddress=any(LocalIP), User=any(InitiatingProcessAccountUpn)
+    by DeviceId, Domain
+| where QueryCount <= MaximumCurrentCount
+| join kind=leftanti Baseline on DeviceId, Domain
+| extend Evidence=strcat("Domain is absent from device baseline; current count ", QueryCount)
+| project DetectionId, Timestamp, User, IPAddress, DeviceId, Domain, QueryCount, Evidence

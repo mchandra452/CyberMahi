@@ -1,0 +1,12 @@
+// DET008: Microsoft Office parent process created a PowerShell child.
+// Validate signatures, internal automation, macro provenance, and full process ancestry.
+let DetectionId = "DET008";
+let Lookback = 1d;
+let OfficeParents = dynamic(["winword.exe", "excel.exe", "outlook.exe", "powerpnt.exe"]);
+DeviceProcessEvents
+| where Timestamp > ago(Lookback)
+| where InitiatingProcessFileName in~ (OfficeParents)
+| where FileName in~ ("powershell.exe", "pwsh.exe")
+| extend User=strcat(AccountDomain, "\\", AccountName), IPAddress="",
+    Evidence="Office parent created a PowerShell child; inspect inert/redacted command evidence in this lab"
+| project DetectionId, Timestamp, User, IPAddress, DeviceId, DeviceName, InitiatingProcessFileName, FileName, ProcessCommandLine, SHA256, Evidence

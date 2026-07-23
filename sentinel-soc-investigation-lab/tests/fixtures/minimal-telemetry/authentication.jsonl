@@ -1,0 +1,1 @@
+{"EventId":"E-MIN-001","ScenarioId":"MINIMAL-SYNTHETIC","Timestamp":"2025-02-18T09:00:00Z","SourceType":"authentication","User":"fixture-user@northbridge.example","IPAddress":"192.0.2.25","DeviceId":"FIXTURE-DEVICE-01","Application":"Fixture Application","Action":"SignIn","Result":"Success","Location":"GB","RiskLevel":"none","IsMalicious":false,"ExpectedDetections":[]}

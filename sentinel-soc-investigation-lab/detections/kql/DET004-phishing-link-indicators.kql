@@ -1,0 +1,20 @@
+// DET004: delivered message with display-name mismatch and a governed suspicious test domain.
+// Safe Links rewriting and legitimate marketing senders must be normalised before production use.
+let DetectionId = "DET004";
+let Lookback = 1d;
+let SuspiciousDomains = dynamic(["microsoft-auth-check.example", "fileshare-login.invalid"]);
+EmailEvents
+| where Timestamp > ago(Lookback)
+| where DeliveryAction in ("Delivered", "Junked")
+| extend SenderDomain=tolower(SenderFromDomain), ClaimedDomain=tolower(extract(@"@([^> ]+)", 1, SenderDisplayName))
+| join kind=inner (
+    EmailUrlInfo
+    | where Timestamp > ago(Lookback)
+    | extend UrlDomain=tolower(UrlDomain)
+    | where UrlDomain in (SuspiciousDomains)
+    | project NetworkMessageId, Url, UrlDomain
+) on NetworkMessageId
+| where SenderDomain in (SuspiciousDomains) or (isnotempty(ClaimedDomain) and ClaimedDomain != SenderDomain)
+| extend User=RecipientEmailAddress, IPAddress="",
+    Evidence=strcat("Delivered message references governed suspicious domain ", UrlDomain)
+| project DetectionId, Timestamp, User, IPAddress, NetworkMessageId, SenderFromAddress, SenderDomain, Url, UrlDomain, DeliveryAction, Evidence

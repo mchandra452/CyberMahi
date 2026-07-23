@@ -1,0 +1,38 @@
+id: DET008
+name: Office Application Spawning PowerShell
+status: test
+description: Detects an Office process creating a PowerShell child in endpoint telemetry.
+author: Mahi
+date_created: "2026-07-23"
+date_modified: "2026-07-23"
+severity: high
+severity_rationale: An Office-to-PowerShell process chain is a high-impact execution signal that warrants immediate endpoint scoping.
+confidence: high
+confidence_rationale: Direct parent-child process telemetry strongly supports the behaviour, while signer, script, and provenance review determine intent.
+data_sources: [Microsoft Defender for Endpoint DeviceProcessEvents]
+query_file: detections/kql/DET008-office-to-powershell.kql
+query_frequency: 10m
+query_period: 1d
+trigger_operator: greater_than_or_equal
+trigger_threshold: 1
+entity_mappings: [Host.DeviceId, Account.Name, Process.ProcessName, Process.CommandLine]
+attack:
+  - technique: T1059.001
+    evidence: Endpoint telemetry directly records a PowerShell child process.
+    confidence: high
+    status: observed
+    additional_evidence: Script content, signing, ancestry, and network behaviour determine maliciousness.
+false_positives: [Legitimate macros, signed internal tools, administrative automation]
+tuning: Allowlist only validated signer/path/parent combinations, not powershell.exe globally.
+investigation_steps: [Inspect process tree, signer, command evidence, document origin, user, and network events.]
+response_actions: [Scope the host and isolate only under approved endpoint procedure.]
+test_cases:
+  - name: Word creates inert PowerShell simulation
+    type: malicious
+    expected: alert
+    event_ids: [E-END-001]
+  - name: management agent creates PowerShell
+    type: benign
+    expected: no_alert
+    event_ids: [E-END-002]
+limitations: The fixture command line is intentionally inert and redacted.

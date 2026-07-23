@@ -1,0 +1,22 @@
+Timestamp,EventId,ScenarioId,SourceType,User,IPAddress,DeviceId,Application,Action,Result,Detections,Synthetic,Scope
+2025-02-18T08:55:00Z,E-EMAIL-001,NFS-IDENTITY-001,email,analyst1@northbridge.example,192.0.2.44,,Exchange Online,MessageDelivered,Delivered,DET004,true,correlated_incident_evidence
+2025-02-18T09:05:00Z,E-AUTH-001,NFS-IDENTITY-001,authentication,analyst1@northbridge.example,203.0.113.50,,Microsoft 365,SignIn,Failure,DET001;DET002,true,correlated_incident_evidence
+2025-02-18T09:06:00Z,E-AUTH-002,NFS-IDENTITY-001,authentication,analyst1@northbridge.example,203.0.113.50,,Microsoft 365,SignIn,Failure,DET001;DET002,true,correlated_incident_evidence
+2025-02-18T09:07:00Z,E-AUTH-003,NFS-IDENTITY-001,authentication,finance1@northbridge.example,203.0.113.50,,Microsoft 365,SignIn,Failure,DET001,true,correlated_incident_evidence
+2025-02-18T09:08:00Z,E-AUTH-004,NFS-IDENTITY-001,authentication,hr1@northbridge.example,203.0.113.50,,Microsoft 365,SignIn,Failure,DET001,true,correlated_incident_evidence
+2025-02-18T09:09:00Z,E-AUTH-005,NFS-IDENTITY-001,authentication,ops1@northbridge.example,203.0.113.50,,Microsoft 365,SignIn,Failure,DET001,true,correlated_incident_evidence
+2025-02-18T09:10:00Z,E-AUTH-006,NFS-IDENTITY-001,authentication,analyst1@northbridge.example,203.0.113.50,,Microsoft 365,SignIn,Failure,DET001;DET002,true,correlated_incident_evidence
+2025-02-18T09:12:00Z,E-AUTH-007,NFS-IDENTITY-001,authentication,analyst1@northbridge.example,203.0.113.50,NFS-UNKNOWN-77,Microsoft 365,SignIn,Success,DET002;DET003,true,correlated_incident_evidence
+2025-02-18T09:20:00Z,E-CLOUD-001,NFS-IDENTITY-001,cloud-app,analyst1@northbridge.example,203.0.113.50,NFS-UNKNOWN-77,Document Workflow Helper,ConsentGranted,Success,DET005,true,correlated_incident_evidence
+2025-02-18T09:28:00Z,E-CLOUD-002,NFS-IDENTITY-001,cloud-app,analyst1@northbridge.example,203.0.113.50,NFS-UNKNOWN-77,Exchange Online,MailboxRuleCreated,Success,DET006,true,correlated_incident_evidence
+2025-02-18T09:35:00Z,E-CLOUD-003,NFS-IDENTITY-001,cloud-app,analyst1@northbridge.example,203.0.113.50,NFS-UNKNOWN-77,SharePoint Online,FileDownloaded,Success,DET007,true,correlated_incident_evidence
+2025-02-18T09:36:00Z,E-CLOUD-004,NFS-IDENTITY-001,cloud-app,analyst1@northbridge.example,203.0.113.50,NFS-UNKNOWN-77,SharePoint Online,FileDownloaded,Success,DET007,true,correlated_incident_evidence
+2025-02-18T09:37:00Z,E-CLOUD-005,NFS-IDENTITY-001,cloud-app,analyst1@northbridge.example,203.0.113.50,NFS-UNKNOWN-77,SharePoint Online,FileDownloaded,Success,DET007,true,correlated_incident_evidence
+2025-02-18T09:38:00Z,E-CLOUD-006,NFS-IDENTITY-001,cloud-app,analyst1@northbridge.example,203.0.113.50,NFS-UNKNOWN-77,SharePoint Online,FileDownloaded,Success,DET007,true,correlated_incident_evidence
+2025-02-18T09:39:00Z,E-CLOUD-007,NFS-IDENTITY-001,cloud-app,analyst1@northbridge.example,203.0.113.50,NFS-UNKNOWN-77,SharePoint Online,FileDownloaded,Success,DET007,true,correlated_incident_evidence
+2025-02-18T09:40:00Z,E-CLOUD-008,NFS-IDENTITY-001,cloud-app,analyst1@northbridge.example,203.0.113.50,NFS-UNKNOWN-77,SharePoint Online,FileDownloaded,Success,DET007,true,correlated_incident_evidence
+2025-02-18T09:41:00Z,E-CLOUD-009,NFS-IDENTITY-001,cloud-app,analyst1@northbridge.example,203.0.113.50,NFS-UNKNOWN-77,SharePoint Online,FileDownloaded,Success,DET007,true,correlated_incident_evidence
+2025-02-18T09:42:00Z,E-CLOUD-010,NFS-IDENTITY-001,cloud-app,analyst1@northbridge.example,203.0.113.50,NFS-UNKNOWN-77,SharePoint Online,FileDownloaded,Success,DET007,true,correlated_incident_evidence
+2025-02-18T09:43:00Z,E-CLOUD-011,NFS-IDENTITY-001,cloud-app,analyst1@northbridge.example,203.0.113.50,NFS-UNKNOWN-77,SharePoint Online,FileDownloaded,Success,DET007,true,correlated_incident_evidence
+2025-02-18T09:50:00Z,E-END-001,NFS-IDENTITY-001,endpoint-process,analyst1@northbridge.example,198.51.100.31,NFS-LT-104,Microsoft Word,ProcessCreated,Success,DET008,true,correlated_incident_evidence
+2025-02-18T09:52:00Z,E-DNS-001,NFS-IDENTITY-001,dns,analyst1@northbridge.example,198.51.100.31,NFS-LT-104,powershell.exe,DnsQuery,Success,DET009,true,correlated_incident_evidence

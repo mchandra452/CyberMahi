@@ -1,0 +1,91 @@
+// DET010: identity-led correlation across independently produced analytics alerts.
+// Constants mirror config/detection-risk-model.yml; use governed watchlists in production.
+let DetectionId = "DET010";
+let CorrelationWindow = 4h;
+let MinimumCategories = 4;
+let HighConfidenceCategories = 6;
+let HighConfidenceDetections = 7;
+let CategoryBonus = 3;
+let MediumRiskScore = 40;
+let HighRiskScore = 70;
+let MaximumRiskScore = 100;
+let KnownVpnConfidenceAdjustment = -20;
+let KnownVpnIps = dynamic(["198.51.100.10"]);
+// Scheduled-rule custom details are stored inside SecurityAlert.ExtendedProperties.
+// Detail values can be scalar or single-item arrays depending on alert construction.
+let DetailValue = (value:dynamic) {
+  iff(isnotempty(tostring(value[0])), tostring(value[0]), tostring(value))
+};
+let Weights = datatable(AlertName:string, Category:string, Weight:int) [
+  "DET001", "authentication", 9, "DET002", "authentication", 12,
+  "DET003", "authentication", 7, "DET004", "email", 8,
+  "DET005", "cloud_application", 13, "DET006", "mailbox", 15,
+  "DET007", "cloud_storage", 8, "DET008", "endpoint", 14,
+  "DET009", "network", 4
+];
+SecurityAlert
+| where TimeGenerated > ago(CorrelationWindow)
+| extend AlertProperties=parse_json(ExtendedProperties)
+| extend CustomDetailsText=tostring(AlertProperties["Custom Details"])
+| extend CustomDetails=iff(
+    isnotempty(CustomDetailsText), parse_json(CustomDetailsText), AlertProperties)
+| extend RuleId=DetailValue(CustomDetails["DetectionId"]),
+    CustomUser=DetailValue(CustomDetails["User"]),
+    IPAddress=DetailValue(CustomDetails["IPAddress"]),
+    DetailDeviceId=DetailValue(CustomDetails["DeviceId"]),
+    DetailDeviceName=DetailValue(CustomDetails["DeviceName"]),
+    DetailApplication=DetailValue(CustomDetails["Application"]),
+    DetailAppDisplayName=DetailValue(CustomDetails["AppDisplayName"]),
+    ApplicationId=DetailValue(CustomDetails["AppId"]),
+    DetailProcessName=DetailValue(CustomDetails["ProcessName"]),
+    DetailFileName=DetailValue(CustomDetails["FileName"]),
+    DetailDomain=DetailValue(CustomDetails["Domain"]),
+    DetailUrlDomain=DetailValue(CustomDetails["UrlDomain"]),
+    DetailForwardingDomain=DetailValue(CustomDetails["ForwardingDomain"]),
+    Mailbox=DetailValue(CustomDetails["MailboxOwnerUPN"]),
+    Url=DetailValue(CustomDetails["Url"])
+| extend User=iff(isnotempty(CustomUser), CustomUser, tostring(CompromisedEntity)),
+    Host=iff(isnotempty(DetailDeviceId), DetailDeviceId, DetailDeviceName),
+    Application=iff(
+        isnotempty(DetailApplication), DetailApplication, DetailAppDisplayName),
+    ProcessName=iff(
+        isnotempty(DetailProcessName), DetailProcessName, DetailFileName),
+    Domain=case(
+        isnotempty(DetailDomain), DetailDomain,
+        isnotempty(DetailUrlDomain), DetailUrlDomain,
+        DetailForwardingDomain)
+| where RuleId startswith "DET" and isnotempty(User)
+| join kind=inner Weights on $left.RuleId == $right.AlertName
+| summarize arg_max(TimeGenerated, *), FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated)
+    by RuleId, User // one contribution per rule suppresses duplicate alert weight
+| summarize RawRiskScore=sum(Weight), IndependentCategories=dcount(Category),
+    LinkedDetections=make_set(RuleId, 20), Categories=make_set(Category, 20),
+    IPAddresses=make_set_if(IPAddress, isnotempty(IPAddress), 50),
+    Hosts=make_set_if(Host, isnotempty(Host), 50),
+    Applications=make_set_if(Application, isnotempty(Application), 50),
+    ApplicationIds=make_set_if(ApplicationId, isnotempty(ApplicationId), 50),
+    Processes=make_set_if(ProcessName, isnotempty(ProcessName), 50),
+    Domains=make_set_if(Domain, isnotempty(Domain), 50),
+    Mailboxes=make_set_if(Mailbox, isnotempty(Mailbox), 50),
+    Urls=make_set_if(Url, isnotempty(Url), 50),
+    FirstSeen=min(FirstSeen), LastSeen=max(LastSeen) by User
+| where IndependentCategories >= MinimumCategories
+| extend CategoryBonusScore=max_of(0, IndependentCategories - MinimumCategories) * CategoryBonus
+| extend RiskScore=min_of(MaximumRiskScore, RawRiskScore + CategoryBonusScore)
+| extend KnownVpnObserved=array_length(set_intersect(IPAddresses, KnownVpnIps)) > 0
+| extend RiskScore=max_of(0, RiskScore + iff(KnownVpnObserved, KnownVpnConfidenceAdjustment, 0))
+| extend BaseConfidence=iff(
+    IndependentCategories >= HighConfidenceCategories and array_length(LinkedDetections) >= HighConfidenceDetections,
+    "high", "medium")
+| extend Timestamp=LastSeen, IPAddress=tostring(IPAddresses[0]),
+    Confidence=iff(KnownVpnObserved, iff(BaseConfidence == "high", "medium", "low"), BaseConfidence),
+    RiskSeverity=case(RiskScore >= HighRiskScore, "high", RiskScore >= MediumRiskScore, "medium", "low"),
+    Evidence=strcat(array_length(LinkedDetections), " unique detections across ", IndependentCategories, " categories"),
+    RecommendedAction="Human-approved identity containment and cloud/endpoint scoping",
+    Entities=bag_pack("Account", pack_array(User), "IP", IPAddresses, "Host", Hosts,
+        "Application", Applications, "ApplicationId", ApplicationIds, "Domain", Domains,
+        "Mailbox", Mailboxes, "Process", Processes, "URL", Urls)
+| project DetectionId, Timestamp, User, IPAddress, RiskScore, RiskSeverity, Confidence,
+    LinkedDetections, Categories, Entities, IPAddresses, Hosts, Applications, ApplicationIds,
+    Domains, Mailboxes, Processes, Urls, FirstSeen, LastSeen, KnownVpnObserved,
+    RecommendedAction, Evidence

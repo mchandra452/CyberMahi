@@ -1,0 +1,63 @@
+{
+  "Confidence": "high",
+  "Entities": {
+    "Account": [
+      "analyst1@northbridge.example",
+      "finance1@northbridge.example",
+      "hr1@northbridge.example",
+      "ops1@northbridge.example"
+    ],
+    "Application": [
+      "Document Workflow Helper"
+    ],
+    "ApplicationId": [
+      "00000000-0000-4000-8000-000000000501"
+    ],
+    "Domain": [
+      "microsoft-auth-check.example",
+      "update-cdn.test"
+    ],
+    "Host": [
+      "NFS-LT-104",
+      "NFS-UNKNOWN-77"
+    ],
+    "IP": [
+      "203.0.113.50"
+    ],
+    "Mailbox": [
+      "analyst1@northbridge.example"
+    ],
+    "Process": [
+      "powershell.exe",
+      "winword.exe"
+    ],
+    "URL": [
+      "https://microsoft-auth-check.example/review"
+    ]
+  },
+  "FirstSeen": "2025-02-18T08:55:00Z",
+  "IncidentId": "INC-NFS-2025-001",
+  "LastSeen": "2025-02-18T09:52:00Z",
+  "LinkedDetections": [
+    "DET001",
+    "DET002",
+    "DET003",
+    "DET004",
+    "DET005",
+    "DET006",
+    "DET007",
+    "DET008",
+    "DET009"
+  ],
+  "Rationale": [
+    "9 unique detections across 7 independent signal categories",
+    "Signals share the primary account and fall within a 4-hour correlation window",
+    "Duplicate detection IDs contribute weight once"
+  ],
+  "RecommendedAnalystAction": "Escalate for human-approved identity containment, consent review, mailbox rule removal, and endpoint scoping.",
+  "RiskScore": 99,
+  "Scope": "offline_incident_fusion",
+  "Severity": "high",
+  "Synthetic": true,
+  "Title": "Identity Compromise and Cloud Persistence Investigation"
+}

@@ -1,0 +1,38 @@
+id: DET002
+name: Successful Authentication After Failure Burst
+status: test
+description: Finds a successful cloud sign-in following repeated failures for the same identity.
+author: Mahi
+date_created: "2026-07-23"
+date_modified: "2026-07-23"
+severity: high
+severity_rationale: A successful sign-in immediately after repeated failures can indicate account access and merits prompt identity triage.
+confidence: high
+confidence_rationale: The same-account sequence is explicit and time-bounded, although user error and stale credentials remain plausible.
+data_sources: [Microsoft Entra ID SigninLogs]
+query_file: detections/kql/DET002-success-after-failures.kql
+query_frequency: 10m
+query_period: 1h
+trigger_operator: greater_than_or_equal
+trigger_threshold: 1
+entity_mappings: [Account.UserPrincipalName, IP.Address]
+attack:
+  - technique: T1078.004
+    evidence: A successful cloud authentication is preceded by a failure burst and supporting context.
+    confidence: medium
+    status: inferred
+    additional_evidence: User confirmation, session, device, and Conditional Access evidence are required.
+false_positives: [User typing errors, stale mobile credentials, automated clients]
+tuning: Adjust the 15-minute window and failure count by authentication flow.
+investigation_steps: [Compare failure and success IPs, devices, applications, and Conditional Access outcomes.]
+response_actions: [Validate with the user and revoke sessions only under approved procedure.]
+test_cases:
+  - name: compromised success after spray
+    type: malicious
+    expected: alert
+    event_ids: [E-AUTH-001, E-AUTH-002, E-AUTH-006, E-AUTH-007]
+  - name: two password typos
+    type: benign
+    expected: no_alert
+    event_ids: [E-AUTH-010, E-AUTH-011, E-AUTH-012]
+limitations: A success after failures is not independently proof of account compromise.

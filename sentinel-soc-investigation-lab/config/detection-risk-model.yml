@@ -1,0 +1,38 @@
+version: 1
+primary_entity: analyst1@northbridge.example
+description: Illustrative offline weights; production weights require tenant baselines and review.
+detection_weights:
+  DET001: 9
+  DET002: 12
+  DET003: 7
+  DET004: 8
+  DET005: 13
+  DET006: 15
+  DET007: 8
+  DET008: 14
+  DET009: 4
+detection_categories:
+  DET001: authentication
+  DET002: authentication
+  DET003: authentication
+  DET004: email
+  DET005: cloud_application
+  DET006: mailbox
+  DET007: cloud_storage
+  DET008: endpoint
+  DET009: network
+category_bonus: 3
+thresholds:
+  minimum_independent_categories: 4
+  high_confidence_categories: 6
+  high_confidence_detections: 7
+  medium: 40
+  high: 70
+  maximum_score: 100
+controls:
+  duplicate_detection_contribution: once
+  known_vpn_ips:
+    - 198.51.100.10
+  known_vpn_confidence_adjustment: -20
+  require_entity_overlap: true
+  correlation_window_hours: 4

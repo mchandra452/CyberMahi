@@ -1,0 +1,85 @@
+{
+  "overall": {
+    "false_negatives": 0,
+    "false_positives": 1,
+    "precision": 0.9091,
+    "recall": 1.0,
+    "true_positives": 10
+  },
+  "passed": true,
+  "per_detection": {
+    "DET001": {
+      "false_negatives": 0,
+      "false_positives": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "true_positives": 1
+    },
+    "DET002": {
+      "false_negatives": 0,
+      "false_positives": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "true_positives": 1
+    },
+    "DET003": {
+      "false_negatives": 0,
+      "false_positives": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "true_positives": 1
+    },
+    "DET004": {
+      "false_negatives": 0,
+      "false_positives": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "true_positives": 1
+    },
+    "DET005": {
+      "false_negatives": 0,
+      "false_positives": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "true_positives": 1
+    },
+    "DET006": {
+      "false_negatives": 0,
+      "false_positives": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "true_positives": 1
+    },
+    "DET007": {
+      "false_negatives": 0,
+      "false_positives": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "true_positives": 1
+    },
+    "DET008": {
+      "false_negatives": 0,
+      "false_positives": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "true_positives": 1
+    },
+    "DET009": {
+      "false_negatives": 0,
+      "false_positives": 1,
+      "precision": 0.5,
+      "recall": 1.0,
+      "true_positives": 1
+    },
+    "DET010": {
+      "false_negatives": 0,
+      "false_positives": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "true_positives": 1
+    }
+  },
+  "prohibited_false_positive_hits": [],
+  "scope": "Synthetic regression fixtures only; not a claim of production detection performance.",
+  "synthetic": true
+}

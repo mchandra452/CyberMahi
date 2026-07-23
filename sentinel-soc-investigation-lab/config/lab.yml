@@ -1,0 +1,19 @@
+project:
+  name: Microsoft Sentinel Detection Engineering & Incident Fusion Lab
+  organisation: Northbridge Financial Services
+  owner: Mahi
+  defensive_only: true
+scenario:
+  id: NFS-IDENTITY-001
+  incident_id: INC-NFS-2025-001
+  name: Identity Compromise and Cloud Persistence Investigation
+  primary_user: analyst1@northbridge.example
+  synthetic: true
+telemetry:
+  format: jsonl
+  minimum_events: 60
+  timezone: UTC
+analysis:
+  correlation_window_hours: 4
+  deterministic: true
+  output_directory: artifacts/latest

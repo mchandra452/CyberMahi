@@ -1,0 +1,26 @@
+{
+  "description": "Static synthetic baselines for deterministic regression testing.",
+  "users": {
+    "analyst1@northbridge.example": {
+      "countries": ["GB"],
+      "devices": ["NFS-LT-104"],
+      "applications": ["Microsoft 365", "SharePoint Online"],
+      "daily_download_count": 3,
+      "baseline_days": 30
+    },
+    "traveller@northbridge.example": {
+      "countries": ["GB", "DE"],
+      "devices": ["NFS-LT-220"],
+      "applications": ["Microsoft 365"],
+      "daily_download_count": 4,
+      "baseline_days": 60
+    },
+    "backup-svc@northbridge.example": {
+      "countries": ["GB"],
+      "devices": ["NFS-SRV-BACKUP"],
+      "applications": ["SharePoint Backup"],
+      "daily_download_count": 250,
+      "baseline_days": 90
+    }
+  }
+}

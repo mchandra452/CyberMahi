@@ -1,0 +1,38 @@
+id: DET006
+name: External Mail Forwarding Rule
+status: test
+description: Detects a new or modified mailbox forwarding rule targeting an external domain.
+author: Mahi
+date_created: "2026-07-23"
+date_modified: "2026-07-23"
+severity: high
+severity_rationale: External forwarding can expose mailbox content continuously and requires prompt validation and scoping.
+confidence: high
+confidence_rationale: The audit event directly records an external target after approved internal domains and administrative cases are considered.
+data_sources: [Microsoft 365 OfficeActivity]
+query_file: detections/kql/DET006-external-mail-forwarding.kql
+query_frequency: 15m
+query_period: 1d
+trigger_operator: greater_than_or_equal
+trigger_threshold: 1
+entity_mappings: [Account.UserId, Mailbox.MailboxOwnerUPN, IP.Address]
+attack:
+  - technique: T1114.003
+    evidence: Synthetic audit evidence records an external forwarding rule.
+    confidence: high
+    status: observed
+    additional_evidence: Rule execution and forwarded-message evidence would confirm collection impact.
+false_positives: [Approved business forwarding, shared mailboxes, administrative transport changes]
+tuning: Maintain approved domains, shared mailboxes, and authorised administrators.
+investigation_steps: [Review actor, target address, rule conditions, messages affected, and identity context.]
+response_actions: [Preserve evidence and remove an unauthorised rule under approved procedure.]
+test_cases:
+  - name: external forwarding after risky sign-in
+    type: malicious
+    expected: alert
+    event_ids: [E-CLOUD-002]
+  - name: internal forwarding rule
+    type: benign
+    expected: no_alert
+    event_ids: [E-CLOUD-031]
+limitations: Client and audit field shapes vary by connector and operation.

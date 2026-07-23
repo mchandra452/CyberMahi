@@ -1,0 +1,25 @@
+// DET003: elevated-risk success from a context absent from a 30-day user baseline.
+// This is not labelled impossible travel; VPN, roaming, proxy, and baseline age require review.
+// ASIM design note: _Im_Authentication is suitable only after local validation of risk,
+// country, device, result, source IP, and application field fidelity.
+let DetectionId = "DET003";
+let DetectionWindow = 1d;
+let BaselineWindow = 30d;
+let KnownVpn = dynamic(["198.51.100.10"]); // Replace with a maintained watchlist.
+let Baseline = SigninLogs
+| where TimeGenerated between (ago(BaselineWindow) .. ago(DetectionWindow))
+| where ResultType == 0
+| summarize KnownCountries=make_set(tostring(LocationDetails.countryOrRegion), 50),
+    KnownDevices=make_set(tostring(DeviceDetail.deviceId), 100) by UserPrincipalName;
+SigninLogs
+| where TimeGenerated > ago(DetectionWindow)
+| where ResultType == 0 and RiskLevelDuringSignIn in ("medium", "high")
+| where IPAddress !in (KnownVpn)
+| extend Country=tostring(LocationDetails.countryOrRegion), DeviceId=tostring(DeviceDetail.deviceId)
+| join kind=leftouter Baseline on UserPrincipalName
+| extend CountryKnown=coalesce(set_has_element(KnownCountries, Country), false),
+    DeviceKnown=coalesce(set_has_element(KnownDevices, DeviceId), false)
+| where CountryKnown == false or DeviceKnown == false
+| extend Timestamp=TimeGenerated, User=UserPrincipalName,
+    Evidence=strcat("Risk=", RiskLevelDuringSignIn, "; country/device differs from baseline")
+| project DetectionId, Timestamp, User, IPAddress, Country, DeviceId, AppDisplayName, RiskLevelDuringSignIn, Evidence

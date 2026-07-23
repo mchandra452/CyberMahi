@@ -1,0 +1,10 @@
+{
+  "vpn_ips": ["198.51.100.10"],
+  "corporate_egress_ips": ["198.51.100.20"],
+  "service_accounts": ["legacy-sync@northbridge.example"],
+  "backup_accounts": ["backup-svc@northbridge.example"],
+  "approved_consent_admins": ["cloud-admin@northbridge.example"],
+  "approved_applications": ["NFS Expense Automation"],
+  "approved_forwarding_domains": ["northbridge.example"],
+  "known_domains": ["login.northbridge.example", "updates.northbridge.example", "backup.northbridge.example"]
+}

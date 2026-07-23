@@ -1,175 +1,152 @@
-# Microsoft Sentinel SOC Investigation Lab - Suspicious Login and Phishing Alert Analysis
+# Microsoft Sentinel Detection Engineering & Incident Fusion Lab
 
-## 1) Friendly Summary
-A practical SOC Analyst Level 1 portfolio project simulating a realistic Microsoft Sentinel investigation. The case combines suspicious sign-ins and phishing telemetry to demonstrate triage, KQL investigation, MITRE ATT&CK mapping, escalation judgement, and concise analyst reporting.
+**Identity-led cloud intrusion detection across Microsoft Sentinel, Microsoft Defender XDR, Entra ID, endpoint, email, and cloud activity telemetry.**
 
-## 2) Scenario
-**Organisation (fictional):** Northbridge Financial Services  
-**Case trigger:** user-reported phishing email + suspicious authentication alerts.
+[![Sentinel SOC Lab CI](https://github.com/mchandra452/CyberMahi/actions/workflows/sentinel-soclab-ci.yml/badge.svg)](https://github.com/mchandra452/CyberMahi/actions/workflows/sentinel-soclab-ci.yml)
 
-The SOC analyst investigates:
-- repeated failed logins against one identity,
-- successful login from an unusual geography,
-- phishing email with fake Microsoft 365-themed login lure,
-- potential credential compromise,
-- whether incident escalation is justified.
+## Executive overview
 
-## 3) Objectives
-- Perform alert triage and entity validation.
-- Use KQL to investigate identity + email evidence.
-- Correlate events into a defensible timeline.
-- Map findings to MITRE ATT&CK without overclaiming.
-- Produce a recruiter-visible incident report and remediation plan.
+This defensive lab models a multi-source investigation at fictional Northbridge Financial Services. Ten repository-managed detections connect a delivered phishing link, password spray, risky account use, OAuth consent, external mailbox forwarding, unusual cloud downloads, an inert Office-to-PowerShell process event, and rare DNS activity. A deterministic Python engine validates detection intent offline while the KQL and metadata remain ready for tenant-specific testing in Microsoft Sentinel through the Microsoft Defender portal.
 
-## 4) Tools Used
-- Microsoft Sentinel (workflow-aligned)
-- Azure Log Analytics / KQL
-- Simulated CSV datasets
-- Markdown reporting artefacts
+The project demonstrates hands-on detection engineering, threat hunting, correlation, regression testing, and incident response without claiming production deployment or live-tenant coverage.
 
-## 5) Skills Demonstrated
-- SIEM monitoring and alert triage
-- KQL query development and hunting
-- Suspicious login and phishing analysis
-- Incident prioritisation and escalation logic
-- MITRE ATT&CK mapping and evidence-based reasoning
-- Analyst communication (technical + stakeholder-friendly)
+## Engineering capabilities
 
-## 6) Lab Architecture
-See `docs/architecture.md`.
+- Ten commented KQL detections with thresholds, bounded windows, entity mappings, ATT&CK evidence, tuning, and test cases.
+- 73 stable JSON Lines events, including four explicit benign controls and an intentionally accepted rare-domain false positive.
+- Duplicate-aware incident fusion using configurable weights and independent signal categories.
+- Offline validation, analysis, synthetic detection regression, deterministic evidence generation, and report building.
+- Pytest, Ruff, secure GitHub Actions, safe-indicator enforcement, secret-pattern checks, and internal-link validation.
 
-## 7) Investigation Workflow
-See `docs/soc-workflow.md`.
+## Architecture
 
-## 8) KQL Detection Examples
-- `kql/suspicious-login-detection.kql`
-- `kql/failed-login-bruteforce-detection.kql`
-- `kql/phishing-indicators-detection.kql`
-- `kql/impossible-travel-detection.kql`
-- `kql/summary-hunting-queries.kql`
-
-> **Environment note:** table schemas differ by connector and tenant. Update table/field names (`SigninLogs`, `EmailEvents`, `SecurityIncident`, `SecurityAlert`, `DeviceEvents`) to match your workspace.
-
-## 9) MITRE ATT&CK Mapping
-See `mitre-attack-mapping.md` for T1566, T1110, T1078 and cautious context notes for T1539/T1589/T1087.
-
-## 10) Incident Timeline (Condensed)
-| Time (UTC) | Event |
-|---|---|
-| 07:47 | Suspicious phishing email delivered and reported |
-| 07:52-08:01 | Repeated failed sign-ins from same IP |
-| 08:05 | Successful sign-in from same suspicious source |
-| 08:09 | Correlated high-severity alert created |
-| 08:25 | Incident opened and containment actions initiated |
-
-Full timeline: `incident-report.md` and `sample-logs/incident-events-sample.csv`.
-
-## 11) Remediation Actions
-- Reset impacted credentials.
-- Revoke active sessions/tokens.
-- Validate MFA health and challenge method.
-- Audit mailbox rules/forwarding.
-- Block malicious indicators and monitor for recurrence.
-
-## 12) Screenshots Placeholder
-Capture checklist in `screenshots/README.md`.
-
-## 13) What I Learned
-- Why correlated identity + phishing signals increase confidence.
-- How to distinguish suspicious patterns from expected user behaviour.
-- How detection thresholds and baselines reduce false positives.
-- How to produce a professional analyst narrative.
-
-## 14) CV Bullet
-Built a Microsoft Sentinel SOC investigation lab simulating suspicious-login and phishing-alert workflows, using KQL, Azure security logs, MITRE ATT&CK mapping, incident triage, and analyst-style reporting.
-
-## 15) LinkedIn Post Draft
-I’ve completed a Microsoft Sentinel SOC Investigation Lab focused on suspicious login and phishing alert analysis.
-
-I used KQL to triage failed login bursts, unusual successful sign-ins, and phishing indicators, then built an incident timeline, mapped findings to MITRE ATT&CK, and wrote a structured analyst report.
-
-I built this as a defensive portfolio project for SOC Analyst / Security Analyst applications. Feedback is welcome.
-
-
-## 16) How to Run
-### Option A: Offline (No Azure Cost) ✅ Recommended first run
-1. Open this folder locally:
-   ```bash
-   cd sentinel-soc-investigation-lab
-   ```
-2. Run the built-in validator:
-   ```bash
-   python3 tests/validate_lab.py
-   ```
-3. Open the sample telemetry files in `sample-logs/` and compare fields to the KQL logic.
-4. Read and step through each query in `kql/` in this order:
-   - `failed-login-bruteforce-detection.kql`
-   - `suspicious-login-detection.kql`
-   - `phishing-indicators-detection.kql`
-   - `summary-hunting-queries.kql`
-5. Use `incident-report.md` and `reports/` as your analyst output template.
-
-### Option B: Microsoft Sentinel Workspace
-1. Create a Log Analytics Workspace and enable Microsoft Sentinel.
-2. Ingest the sample CSVs as custom logs (or map to existing schema).
-3. Run the KQL queries from `kql/` (adjust table/field names where needed).
-4. Capture screenshots and update the incident report with your run findings.
-
-## 17) Run and Test This Project
-### Quick validation (offline)
-Run the built-in validator to confirm file presence, CSV schema correctness, timestamp format, and safe-domain usage:
-
-```bash
-python3 tests/validate_lab.py
+```mermaid
+flowchart LR
+    A["Entra ID authentication"] --> S["Microsoft Sentinel in Defender portal"]
+    E["Defender for Office 365"] --> S
+    C["Microsoft 365 cloud activity"] --> S
+    X["Defender for Endpoint"] --> S
+    D["DNS and network telemetry"] --> S
+    S --> K["DET001–DET009 analytics and hunting"]
+    K --> F["DET010 identity-led fusion"]
+    F --> I["Human-led investigation and response"]
+    R["Repository: KQL, metadata, tests"] --> K
+    O["Offline Python regression engine"] --> R
+    T["Deterministic synthetic telemetry"] --> O
 ```
 
-### Sentinel execution workflow
-1. Import sample CSV data into custom Log Analytics tables (or map to your existing schema).
-2. Open each query in `kql/` and adjust table/field names if required.
-3. Execute detections, save results, and capture evidence screenshots.
-4. Update `incident-report.md` with your run-specific findings.
+See [architecture](docs/architecture.md) and [attack path](docs/attack-path.md) for boundaries and evidence flow.
 
-## 18) Defensive Use Disclaimer
-This repository is for defensive cybersecurity learning and job-portfolio use only. All logs are simulated. No malware, credential stealing tooling, or offensive attack instructions are included.
+## Intrusion scenario
 
+The primary scenario is **Identity Compromise and Cloud Persistence Investigation**. It starts with a Microsoft 365-themed synthetic message and ends with correlated identity, cloud, mailbox, endpoint, and DNS evidence. Four benign controls—corporate VPN travel, service-account failures, approved administrator consent, and backup downloads—test tuning. Events use reserved domains and documentation IP ranges only.
 
-## 19) Project Status
-- Current status: **Portfolio-ready for UK SOC Analyst Level 1 applications**
-- Validation: runnable local integrity checks via `python3 tests/validate_lab.py`
-- Details: `docs/project-status.md`
+## Detection catalog
 
-## 20) Working vs Simulated
-### Working in this repository
-- Structured SOC investigation artefacts and reporting templates
-- KQL query pack with commented detection logic
-- Sample logs validated for schema, timestamps, and safe domains
-- Offline validation script for consistency checks
+| ID | Detection | Signal | Severity | Confidence |
+|---|---|---|---|---|
+| DET001 | Password Spray Across Cloud Accounts | Entra authentication | Medium | High |
+| DET002 | Successful Authentication After Failure Burst | Entra authentication | High | High |
+| DET003 | Unusual Authentication Context | Entra + baseline | Medium | Medium |
+| DET004 | Phishing-Link Indicators | Email + URL | Medium | High |
+| DET005 | Suspicious OAuth Consent | Entra audit | High | Medium |
+| DET006 | External Mail Forwarding Rule | Exchange audit | High | High |
+| DET007 | Cloud Download Anomaly | Cloud files + baseline | Medium | Medium |
+| DET008 | Office Application Spawning PowerShell | Endpoint process | High | High |
+| DET009 | New or Rare Domain DNS Activity | Endpoint network | Low | Medium |
+| DET010 | Identity-Led Incident Fusion | Correlated alerts | High | High |
 
-### Simulated / requires your own lab
-- Live Sentinel ingestion and query execution depend on your Azure workspace
-- Screenshots must be captured in your own environment
-- Incident telemetry is fictional for defensive training
+Full assumptions and test status are in the [detection catalog](docs/detection-catalog.md).
 
-## 21) Verification Checklist
-1. Run local validator: `python3 tests/validate_lab.py`
-2. Confirm all checks show `[PASS]`
-3. (Optional) Import CSVs into Sentinel custom tables
-4. Run KQL queries in the documented order
-5. Update incident report with your observed outputs
+## Offline quick start
 
-## 22) Recruiter/Analyst Support Docs
-- `docs/project-status.md`
-- `docs/troubleshooting.md`
-- `docs/escalation-decision-tree.md`
-- `docs/false-positive-handling.md`
-- `docs/demo-walkthrough.md`
+Python 3.11 or newer is required. The Python equivalents test intent against synthetic data; they do not execute KQL.
 
-## 23) Screenshot Checklist (capture next)
-- Sentinel workspace overview
-- Data connector / custom table ingestion status
-- Failed login burst query results
-- Suspicious location login query results
-- Phishing indicator query results
-- Incident timeline/correlation evidence
-- MITRE ATT&CK mapping section
-- Final incident report summary
+Linux/macOS:
+
+```bash
+git clone https://github.com/mchandra452/CyberMahi.git
+cd CyberMahi/sentinel-soc-investigation-lab
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -e ".[dev]"
+python -m soclab validate
+python -m soclab analyze
+python -m soclab test-detections
+python -m soclab build-report
+pytest
+```
+
+Windows PowerShell:
+
+```powershell
+git clone https://github.com/mchandra452/CyberMahi.git
+Set-Location CyberMahi\sentinel-soc-investigation-lab
+py -m venv .venv
+.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+python -m pip install -e ".[dev]"
+python -m soclab validate
+python -m soclab analyze
+python -m soclab test-detections
+python -m soclab build-report
+pytest
+```
+
+Make targets call the same commands without hiding failures:
+
+```bash
+make validate
+make analyze
+make test
+make report
+make all
+```
+
+## Example output
+
+The committed [analysis summary](artifacts/example/analysis-summary.md) and related evidence are generated from the fixture rather than written independently. A verified run produces:
+
+```text
+Incident: INC-NFS-2025-001
+Risk: 99/100 (high severity, high confidence)
+Linked detections: DET001-DET009
+Synthetic regression: TP=10, FP=1, FN=0, precision=0.9091, recall=1.0000
+```
+
+The accepted benign DNS novelty case intentionally prevents a misleading claim of perfect precision. The report and timeline contain only findings that actually contributed to the incident; the accepted false positive remains visible in `findings.json` and metrics.
+
+## Repository structure
+
+```text
+config/             lab policy, safe indicators, risk weights
+data/               JSONL telemetry, baselines, expected labels
+detections/kql/     native-table KQL queries
+detections/rules/   analytics metadata and test cases
+src/soclab/         offline engine and CLI
+tests/              unit, integration, and repository checks
+docs/               engineering, deployment, hunt, and response guides
+artifacts/example/  deterministic generated evidence
+.github/            project templates; active CI is at the monorepo root
+```
+
+## Sentinel deployment path
+
+Use the [Sentinel deployment guide](docs/sentinel-deployment.md) to map fields, onboard connectors, test KQL, configure analytics/entity mapping, and validate incidents in the Microsoft Defender portal. Nothing in this repository deploys to or modifies a tenant.
+
+## Evidence and testing
+
+The [project status](docs/project-status.md), [methodology](docs/detection-engineering-methodology.md), [false-positive analysis](docs/false-positive-analysis.md), [coverage and gaps](docs/coverage-and-gaps.md), and [incident runbook](docs/incident-response-runbook.md) explain what is verified and what still needs live evidence. The monorepo-root CI workflow runs linting, pytest, validation, analysis, regression tests, report generation, and committed-example parity checks on Python 3.11 and 3.12.
+
+## Limitations
+
+- Source evidence is synthetic; no real organisation, victim, tenant, or incident is represented.
+- Python tests implement equivalent intent but do not parse or run KQL.
+- Live connector fields, data quality, retention, baselines, licensing, and costs vary by tenant.
+- Domain reputation, publisher verification, device-signing enrichment, and user/session context are limited offline.
+- Detection weights and thresholds are illustrative and require production tuning and governance.
+
+## Defensive use
+
+This repository is defensive-only. Suspicious process text is inert and redacted; all network indicators use reserved namespaces or documentation ranges. Review [SECURITY.md](SECURITY.md) before adding evidence or adapting automation.

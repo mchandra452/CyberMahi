@@ -1,0 +1,32 @@
+name: Detection improvement
+description: Propose an evidence-backed change to a detection or its tests.
+title: "[Detection]: "
+labels: [detection]
+body:
+  - type: input
+    id: detection
+    attributes:
+      label: Detection ID
+      placeholder: DET001
+    validations:
+      required: true
+  - type: textarea
+    id: hypothesis
+    attributes:
+      label: Behavioural hypothesis
+      description: State the observable behaviour and benign alternatives.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Safe evidence and test cases
+      description: Use only synthetic events and reserved indicators.
+    validations:
+      required: true
+  - type: textarea
+    id: impact
+    attributes:
+      label: Tuning and operational impact
+    validations:
+      required: true
