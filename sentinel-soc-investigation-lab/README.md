@@ -10,6 +10,30 @@ This defensive lab models a multi-source investigation at fictional Northbridge 
 
 The project demonstrates hands-on detection engineering, threat hunting, correlation, regression testing, and incident response without claiming production deployment or live-tenant coverage.
 
+## 60-second offline quick start
+
+Prerequisites: Git, Python 3.11 or newer, and internet access for the first dependency install. Offline mode does not require Azure, a Microsoft tenant, Sentinel connectors, or environment activation.
+
+Linux/macOS:
+
+```bash
+git clone https://github.com/mchandra452/CyberMahi.git
+cd CyberMahi/sentinel-soc-investigation-lab
+./scripts/run_offline.sh
+```
+
+Windows PowerShell:
+
+```powershell
+git clone https://github.com/mchandra452/CyberMahi.git
+Set-Location CyberMahi\sentinel-soc-investigation-lab
+.\scripts\run_offline.ps1
+```
+
+On first use, the runner creates `.venv`, installs the lab with its test tools, and validates the repository. It then runs analysis, detection regression, report generation, and pytest using that environment's Python. Subsequent runs reuse `.venv`.
+
+Successful runs write deterministic evidence to `artifacts/latest/`. To install without running the full workflow, use `./scripts/setup.sh` or `.\scripts\setup.ps1`.
+
 ## Engineering capabilities
 
 - Ten commented KQL detections with thresholds, bounded windows, entity mappings, ATT&CK evidence, tuning, and test cases.
@@ -58,43 +82,33 @@ The primary scenario is **Identity Compromise and Cloud Persistence Investigatio
 
 Full assumptions and test status are in the [detection catalog](docs/detection-catalog.md).
 
-## Offline quick start
+## Manual commands
 
-Python 3.11 or newer is required. The Python equivalents test intent against synthetic data; they do not execute KQL.
+The setup script is equivalent to creating `.venv` and running `.venv`'s Python with `-m pip install -e ".[dev]"`. The Python equivalents test detection intent against synthetic data; they do not execute KQL.
+
+After setup, individual commands can be run without activating the environment.
 
 Linux/macOS:
 
 ```bash
-git clone https://github.com/mchandra452/CyberMahi.git
-cd CyberMahi/sentinel-soc-investigation-lab
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -e ".[dev]"
-python -m soclab validate
-python -m soclab analyze
-python -m soclab test-detections
-python -m soclab build-report
-pytest
+.venv/bin/python -m soclab validate
+.venv/bin/python -m soclab analyze
+.venv/bin/python -m soclab test-detections
+.venv/bin/python -m soclab build-report
+.venv/bin/python -m pytest
 ```
 
 Windows PowerShell:
 
 ```powershell
-git clone https://github.com/mchandra452/CyberMahi.git
-Set-Location CyberMahi\sentinel-soc-investigation-lab
-py -m venv .venv
-.venv\Scripts\Activate.ps1
-python -m pip install --upgrade pip
-python -m pip install -e ".[dev]"
-python -m soclab validate
-python -m soclab analyze
-python -m soclab test-detections
-python -m soclab build-report
-pytest
+.venv\Scripts\python.exe -m soclab validate
+.venv\Scripts\python.exe -m soclab analyze
+.venv\Scripts\python.exe -m soclab test-detections
+.venv\Scripts\python.exe -m soclab build-report
+.venv\Scripts\python.exe -m pytest
 ```
 
-Make targets call the same commands without hiding failures:
+Make is optional on Linux/macOS. Its targets call the same commands without hiding failures:
 
 ```bash
 make validate

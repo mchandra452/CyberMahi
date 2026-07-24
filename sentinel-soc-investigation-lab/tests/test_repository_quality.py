@@ -38,6 +38,19 @@ def test_generated_output_is_deterministic(root):
     assert hashes(root) == first
 
 
+def test_generated_output_matches_committed_example_byte_for_byte(root):
+    command_analyze(root)
+    command_build_report(root)
+    latest = root / "artifacts/latest"
+    example = root / "artifacts/example"
+
+    latest_files = {path.name: path for path in latest.iterdir() if path.is_file()}
+    example_files = {path.name: path for path in example.iterdir() if path.is_file()}
+    assert latest_files.keys() == example_files.keys()
+    for name, path in latest_files.items():
+        assert path.read_bytes() == example_files[name].read_bytes(), name
+
+
 def test_stale_latest_files_are_removed(root):
     output = root / "artifacts/latest"
     output.mkdir(parents=True, exist_ok=True)
@@ -135,9 +148,24 @@ def test_fusion_kql_reads_security_alert_custom_details_from_extended_properties
     assert 'AlertProperties["Custom Details"]' in query
 
 
-def test_windows_runner_propagates_native_failures(root):
-    script = (root / "scripts/run_offline.ps1").read_text(encoding="utf-8")
-    assert script.count("$LASTEXITCODE -ne 0") == 5
+def test_clone_ready_scripts_are_self_locating_and_use_the_project_environment(root):
+    scripts = root / "scripts"
+    powershell_setup = (scripts / "setup.ps1").read_text(encoding="utf-8")
+    powershell_run = (scripts / "run_offline.ps1").read_text(encoding="utf-8")
+    shell_setup = (scripts / "setup.sh").read_text(encoding="utf-8")
+    shell_run = (scripts / "run_offline.sh").read_text(encoding="utf-8")
+
+    assert "$PSScriptRoot" in powershell_setup
+    assert "$PSScriptRoot" in powershell_run
+    assert ".venv" in powershell_setup
+    assert ".venv" in powershell_run
+    assert "$LASTEXITCODE -ne 0" in powershell_setup
+    assert "$LASTEXITCODE -ne 0" in powershell_run
+    assert 'dirname -- "$0"' in shell_setup
+    assert 'dirname -- "$0"' in shell_run
+    assert ".venv" in shell_setup
+    assert ".venv" in shell_run
+    assert "-m pytest" in shell_run
 
 
 def test_portfolio_marketing_terms_do_not_reappear(root):

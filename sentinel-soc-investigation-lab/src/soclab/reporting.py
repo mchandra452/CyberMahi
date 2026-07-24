@@ -12,8 +12,14 @@ from soclab.config import analysis_output_directory, load_yaml
 from soclab.models import CorrelationResult, Event, Finding, Incident
 
 
+def _write_text(path: Path, value: str) -> None:
+    """Write deterministic UTF-8 text without platform newline translation."""
+
+    path.write_text(value, encoding="utf-8", newline="\n")
+
+
 def _write_json(path: Path, value: Any) -> None:
-    path.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    _write_text(path, json.dumps(value, indent=2, sort_keys=True) + "\n")
 
 
 def _iso_timestamp(event_time: Any) -> str:
@@ -176,7 +182,7 @@ def write_analysis_artifacts(
 This result is generated from synthetic evidence and is not proof that the KQL executed
 in Microsoft Sentinel.
 """
-    (output / "analysis-summary.md").write_text(summary, encoding="utf-8")
+    _write_text(output / "analysis-summary.md", summary)
     return output
 
 
@@ -386,5 +392,5 @@ but do not execute KQL. Live connector schemas, licences, ingestion, retention, 
 rule scheduling, and thresholds require tenant-specific validation and tuning.
 """
     path = output / "investigation-report.md"
-    path.write_text(report, encoding="utf-8")
+    _write_text(path, report)
     return path

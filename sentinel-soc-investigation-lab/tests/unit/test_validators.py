@@ -17,6 +17,7 @@ from soclab.validators import (
     _validate_links_and_content,
     _validate_reference_incident,
     _validate_risk_controls,
+    _validate_structure,
     _validate_telemetry,
     _validate_text_indicators,
     validate_repository,
@@ -210,3 +211,15 @@ def test_labels_match_rule_test_evidence(root):
 
 def test_repository_validator_passes(root):
     assert validate_repository(root) == []
+
+
+def test_structure_accepts_monorepo_workflow_without_git_metadata(tmp_path):
+    lab_root = tmp_path / "downloaded-archive" / "sentinel-soc-investigation-lab"
+    workflow = lab_root.parent / ".github/workflows/sentinel-soclab-ci.yml"
+    workflow.parent.mkdir(parents=True)
+    workflow.write_text("name: test\n", encoding="utf-8")
+
+    errors: list[str] = []
+    _validate_structure(lab_root, errors)
+
+    assert not any("workflow" in error.lower() for error in errors)

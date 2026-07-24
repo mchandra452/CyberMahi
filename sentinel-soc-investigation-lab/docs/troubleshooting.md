@@ -2,7 +2,9 @@
 
 ## Package cannot be imported
 
-Run `python -m pip install -e ".[dev]"` from the repository root and confirm `python --version` is 3.11 or newer. If using a virtual environment, verify its interpreter is active.
+Run `./scripts/setup.sh` on Linux/macOS or `.\scripts\setup.ps1` on Windows from `sentinel-soc-investigation-lab/` (the lab root). The setup script requires Python 3.11 or newer and uses `.venv` directly, so activation is not required.
+
+On Debian or Ubuntu, install the matching `python3-venv` package if virtual-environment creation is unavailable. If PowerShell blocks local scripts, run `Set-ExecutionPolicy -Scope Process Bypass` in that terminal and retry; this changes policy only for the current process.
 
 ## Validation reports an unsafe indicator
 

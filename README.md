@@ -1,32 +1,33 @@
-# CyberMahi
+# CyberMahi Security Engineering Labs
 
-CyberMahi is a cybersecurity portfolio repository by **mahi452**, focused on practical blue-team, AI security, cloud security, and threat detection projects.
+CyberMahi contains defensive security engineering projects with reproducible local workflows, synthetic evidence, and automated checks.
 
-## Featured Project
+## Microsoft Sentinel detection engineering lab
 
-### AgentShield Lab
+The [Sentinel detection engineering and incident fusion lab](sentinel-soc-investigation-lab/README.md) provides ten metadata-backed KQL detections, a deterministic Python analysis engine, malicious and benign regression scenarios, duplicate-aware incident fusion, and generated investigation evidence.
 
-**Offensive & Defensive AI Security Testing Framework**
+Python 3.11 or newer, Git, and internet access for the first dependency install are the only prerequisites for offline use. No Microsoft tenant or Azure subscription is required.
 
-AgentShield Lab is a professional AI security project that simulates prompt injection, tool abuse, data exposure, insecure output handling, and denial-of-service style prompt attacks in a controlled lab environment.
+Linux/macOS:
 
-The project is built from a Security Operations perspective: attack scenarios are documented, detections are mapped, alerts are logged, and mitigations are explained in a clean analyst-friendly format.
+```bash
+git clone https://github.com/mchandra452/CyberMahi.git
+cd CyberMahi/sentinel-soc-investigation-lab
+./scripts/run_offline.sh
+```
 
-[Open AgentShield Lab](projects/AgentShield-Lab/README.md)
+Windows PowerShell:
 
-## Focus Areas
+```powershell
+git clone https://github.com/mchandra452/CyberMahi.git
+Set-Location CyberMahi\sentinel-soc-investigation-lab
+.\scripts\run_offline.ps1
+```
 
-- Security Operations
-- AI Security
-- Prompt Injection Testing
-- Threat Detection
-- Cloud Security
-- Incident Response
-- Vulnerability Management
-- Python Security Tooling
+The runner creates an isolated `.venv` on first use, installs the project, validates the repository, runs the synthetic analysis and regression suite, builds the report, and runs pytest. Generated evidence is written to `sentinel-soc-investigation-lab/artifacts/latest/`.
 
-## Author
+## AgentShield lab
 
-**mahi452**
+The [AgentShield lab](projects/AgentShield-Lab/README.md) is a controlled AI security testing framework covering prompt injection, tool abuse, data exposure, insecure output handling, and denial-of-service-style prompt attacks.
 
-Cybersecurity Analyst | Security Operations | Cloud Security | Threat Intelligence | Vulnerability Management
+All projects are designed for authorised, defensive testing. Review each project's security and limitations documentation before adapting it.

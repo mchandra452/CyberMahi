@@ -87,6 +87,8 @@ REQUIRED_ROOT = {
     "detections/schemas/detection-rule.schema.json",
     "scripts/run_offline.ps1",
     "scripts/run_offline.sh",
+    "scripts/setup.ps1",
+    "scripts/setup.sh",
 }
 REQUIRED_TELEMETRY_FILES = frozenset(SOURCE_TYPES_BY_FILENAME)
 PROHIBITED_DOC_TERMS = (
@@ -165,22 +167,16 @@ def _validate_structure(root: Path, errors: list[str]) -> None:
         if not (root / directory).is_dir():
             errors.append(f"missing required directory: {directory}")
 
-    monorepo_workflow = root.parent / ".github" / "workflows" / "sentinel-soclab-ci.yml"
-    if (root.parent / ".git").exists():
-        if not monorepo_workflow.is_file():
-            errors.append(
-                "missing required monorepo workflow: .github/workflows/sentinel-soclab-ci.yml"
-            )
-    else:
-        standalone_workflows = (
-            root / ".github" / "workflows" / "ci.yml",
-            root / ".github" / "workflows" / "sentinel-soclab-ci.yml",
+    workflow_candidates = (
+        root.parent / ".github" / "workflows" / "sentinel-soclab-ci.yml",
+        root / ".github" / "workflows" / "ci.yml",
+        root / ".github" / "workflows" / "sentinel-soclab-ci.yml",
+    )
+    if not any(path.is_file() for path in workflow_candidates):
+        errors.append(
+            "missing required CI workflow at ../.github/workflows/sentinel-soclab-ci.yml, "
+            ".github/workflows/ci.yml, or .github/workflows/sentinel-soclab-ci.yml"
         )
-        if not any(path.is_file() for path in standalone_workflows):
-            errors.append(
-                "missing required standalone workflow: .github/workflows/ci.yml "
-                "or .github/workflows/sentinel-soclab-ci.yml"
-            )
 
 
 def _is_number(value: Any) -> bool:
