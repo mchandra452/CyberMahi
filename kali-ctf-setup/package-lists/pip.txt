@@ -1,0 +1,6 @@
+pwntools
+pycryptodome
+requests
+impacket
+ropgadget
+scapy
