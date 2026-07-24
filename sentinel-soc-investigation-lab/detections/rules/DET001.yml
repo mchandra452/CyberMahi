@@ -1,0 +1,38 @@
+id: DET001
+name: Password Spray Across Cloud Accounts
+status: test
+description: Detects one source generating a small failure set across several cloud accounts.
+author: Mahi
+date_created: "2026-07-23"
+date_modified: "2026-07-23"
+severity: medium
+severity_rationale: A multi-account spray is material identity risk, but failures alone do not show successful access.
+confidence: high
+confidence_rationale: The bounded failure and account thresholds closely match password-spray behaviour after governed egress and service-account exclusions.
+data_sources: [Microsoft Entra ID SigninLogs]
+query_file: detections/kql/DET001-password-spray.kql
+query_frequency: 10m
+query_period: 30m
+trigger_operator: greater_than_or_equal
+trigger_threshold: 1
+entity_mappings: [Account.UserPrincipalName, IP.Address]
+attack:
+  - technique: T1110.003
+    evidence: Multiple accounts receive failures from one source in a bounded window.
+    confidence: high
+    status: observed
+    additional_evidence: Password similarity and distributed-source analysis improve attribution.
+false_positives: [Misconfigured applications, shared egress, service account failures]
+tuning: Exclude governed service accounts and corporate egress; tune user and failure thresholds.
+investigation_steps: [Review result codes, targeted accounts, source history, and later successful sign-ins.]
+response_actions: [Escalate only when identity or contextual evidence corroborates the spray.]
+test_cases:
+  - name: multi-account spray
+    type: malicious
+    expected: alert
+    event_ids: [E-AUTH-001, E-AUTH-002, E-AUTH-003, E-AUTH-004, E-AUTH-005, E-AUTH-006]
+  - name: service account failures
+    type: benign
+    expected: suppressed
+    event_ids: [E-AUTH-014, E-AUTH-015, E-AUTH-016, E-AUTH-017, E-AUTH-018, E-AUTH-019]
+limitations: Single-source logic does not fully cover distributed spraying.

@@ -1,0 +1,38 @@
+id: DET005
+name: Suspicious OAuth Consent
+status: test
+description: Detects first-seen application consent with high-impact scopes by an unapproved actor.
+author: Mahi
+date_created: "2026-07-23"
+date_modified: "2026-07-23"
+severity: high
+severity_rationale: High-impact delegated scopes can expose mail and files or preserve access, so unauthorised consent requires urgent review.
+confidence: medium
+confidence_rationale: First-seen application and scope evidence is strong, but publisher verification, user intent, token issuance, and follow-on use are absent offline.
+data_sources: [Microsoft Entra ID AuditLogs]
+query_file: detections/kql/DET005-suspicious-oauth-consent.kql
+query_frequency: 15m
+query_period: 1d
+trigger_operator: greater_than_or_equal
+trigger_threshold: 1
+entity_mappings: [Account.UserPrincipalName, Application.AppId, Application.Name, IP.Address]
+attack:
+  - technique: T1098.003
+    evidence: A first-seen cloud application received high-impact delegated permissions from an unapproved synthetic actor.
+    confidence: medium
+    status: inferred
+    additional_evidence: This consent record does not show token theft or token abuse; confirm the service principal, grant, token issuance, sign-ins, and follow-on application activity.
+false_positives: [Approved administrator consent, verified business applications, deployment automation]
+tuning: Maintain authorised admins/apps and classify scopes by local impact.
+investigation_steps: [Verify publisher, consent type, actor, service principal, scopes, and subsequent application use.]
+response_actions: [Revoke unauthorised grants through human-approved change procedure.]
+test_cases:
+  - name: first-seen app with mail and file scopes
+    type: malicious
+    expected: alert
+    event_ids: [E-CLOUD-001]
+  - name: approved administrator consent
+    type: benign
+    expected: suppressed
+    event_ids: [E-CLOUD-020]
+limitations: Consent alone does not demonstrate token theft or malicious application use.

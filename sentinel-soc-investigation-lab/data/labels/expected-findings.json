@@ -1,0 +1,55 @@
+{
+  "description": "Expected synthetic regression cases. Accepted benign false positives count against precision but do not fail the run.",
+  "detections": {
+    "DET001": {
+      "required_cases": [{"name": "single-source password spray", "event_ids": ["E-AUTH-001", "E-AUTH-002", "E-AUTH-003", "E-AUTH-004", "E-AUTH-005", "E-AUTH-006"]}],
+      "benign_event_ids": [],
+      "prohibited_false_positive_event_ids": ["E-AUTH-014", "E-AUTH-015", "E-AUTH-016", "E-AUTH-017", "E-AUTH-018", "E-AUTH-019"]
+    },
+    "DET002": {
+      "required_cases": [{"name": "success after failure burst", "event_ids": ["E-AUTH-001", "E-AUTH-002", "E-AUTH-006", "E-AUTH-007"]}],
+      "benign_event_ids": [],
+      "prohibited_false_positive_event_ids": ["E-AUTH-010", "E-AUTH-011", "E-AUTH-012"]
+    },
+    "DET003": {
+      "required_cases": [{"name": "new risky context", "event_ids": ["E-AUTH-007"]}],
+      "benign_event_ids": [],
+      "prohibited_false_positive_event_ids": ["E-AUTH-013"]
+    },
+    "DET004": {
+      "required_cases": [{"name": "delivered phishing link", "event_ids": ["E-EMAIL-001"]}],
+      "benign_event_ids": [],
+      "prohibited_false_positive_event_ids": ["E-EMAIL-002", "E-EMAIL-003", "E-EMAIL-004", "E-EMAIL-005"]
+    },
+    "DET005": {
+      "required_cases": [{"name": "high-impact consent", "event_ids": ["E-CLOUD-001"]}],
+      "benign_event_ids": [],
+      "prohibited_false_positive_event_ids": ["E-CLOUD-020"]
+    },
+    "DET006": {
+      "required_cases": [{"name": "external forwarding", "event_ids": ["E-CLOUD-002"]}],
+      "benign_event_ids": [],
+      "prohibited_false_positive_event_ids": ["E-CLOUD-031"]
+    },
+    "DET007": {
+      "required_cases": [{"name": "download anomaly", "event_ids": ["E-CLOUD-003", "E-CLOUD-004", "E-CLOUD-005", "E-CLOUD-006", "E-CLOUD-007", "E-CLOUD-008", "E-CLOUD-009", "E-CLOUD-010", "E-CLOUD-011"]}],
+      "benign_event_ids": [],
+      "prohibited_false_positive_event_ids": ["E-CLOUD-021", "E-CLOUD-022", "E-CLOUD-023", "E-CLOUD-024", "E-CLOUD-025", "E-CLOUD-026", "E-CLOUD-027", "E-CLOUD-028", "E-CLOUD-029", "E-CLOUD-030"]
+    },
+    "DET008": {
+      "required_cases": [{"name": "Office to PowerShell", "event_ids": ["E-END-001"]}],
+      "benign_event_ids": [],
+      "prohibited_false_positive_event_ids": ["E-END-002"]
+    },
+    "DET009": {
+      "required_cases": [{"name": "rare domain in chain", "event_ids": ["E-DNS-001"]}],
+      "benign_event_ids": ["E-DNS-002"],
+      "prohibited_false_positive_event_ids": []
+    },
+    "DET010": {
+      "required_cases": [{"name": "identity-led incident", "event_ids": ["E-EMAIL-001", "E-AUTH-001", "E-AUTH-002", "E-AUTH-003", "E-AUTH-004", "E-AUTH-005", "E-AUTH-006", "E-AUTH-007", "E-CLOUD-001", "E-CLOUD-002", "E-CLOUD-003", "E-CLOUD-004", "E-CLOUD-005", "E-CLOUD-006", "E-CLOUD-007", "E-CLOUD-008", "E-CLOUD-009", "E-CLOUD-010", "E-CLOUD-011", "E-END-001", "E-DNS-001"]}],
+      "benign_cases": [{"name": "benign multi-source activity", "event_ids": ["E-AUTH-008", "E-EMAIL-002", "E-CLOUD-032", "E-END-003", "E-DNS-003"]}],
+      "prohibited_false_positive_event_ids": []
+    }
+  }
+}

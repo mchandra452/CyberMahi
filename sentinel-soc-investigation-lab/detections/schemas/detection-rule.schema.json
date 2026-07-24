@@ -1,0 +1,143 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://northbridge.example/schemas/detection-rule.schema.json",
+  "title": "Sentinel detection rule metadata",
+  "type": "object",
+  "required": [
+    "id", "name", "status", "description", "author", "date_created", "date_modified",
+    "severity", "severity_rationale", "confidence", "confidence_rationale", "data_sources",
+    "query_file", "query_frequency", "query_period", "trigger_operator", "trigger_threshold",
+    "entity_mappings", "attack", "false_positives", "tuning", "investigation_steps",
+    "response_actions", "test_cases", "limitations"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^DET(?:00[1-9]|010)$"
+    },
+    "name": {"type": "string", "minLength": 1},
+    "status": {"type": "string", "minLength": 1},
+    "description": {"type": "string", "minLength": 1},
+    "author": {"type": "string", "minLength": 1},
+    "date_created": {"type": "string", "format": "date"},
+    "date_modified": {"type": "string", "format": "date"},
+    "severity": {
+      "type": "string",
+      "enum": ["informational", "low", "medium", "high"]
+    },
+    "severity_rationale": {"type": "string", "minLength": 1},
+    "confidence": {
+      "type": "string",
+      "enum": ["low", "medium", "high"]
+    },
+    "confidence_rationale": {"type": "string", "minLength": 1},
+    "data_sources": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "query_file": {
+      "type": "string",
+      "pattern": "^detections/kql/DET(?:00[1-9]|010)-[a-z0-9-]+\\.kql$"
+    },
+    "query_frequency": {
+      "type": "string",
+      "pattern": "^[1-9][0-9]*[mhd]$"
+    },
+    "query_period": {
+      "type": "string",
+      "pattern": "^[1-9][0-9]*[mhd]$"
+    },
+    "trigger_operator": {
+      "type": "string",
+      "enum": [
+        "equal", "not_equal", "greater_than", "greater_than_or_equal",
+        "less_than", "less_than_or_equal"
+      ]
+    },
+    "trigger_threshold": {"type": "integer", "minimum": 0},
+    "entity_mappings": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "^[A-Za-z][A-Za-z0-9_]*\\.[A-Za-z][A-Za-z0-9_]*$"
+      }
+    },
+    "attack": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "oneOf": [
+          {"$ref": "#/$defs/attack_mapping"},
+          {"$ref": "#/$defs/unmapped_attack_assessment"}
+        ]
+      }
+    },
+    "false_positives": {"$ref": "#/$defs/nonempty_string_array"},
+    "tuning": {"type": "string", "minLength": 1},
+    "investigation_steps": {"$ref": "#/$defs/nonempty_string_array"},
+    "response_actions": {"$ref": "#/$defs/nonempty_string_array"},
+    "test_cases": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["name", "type", "expected", "event_ids"],
+        "properties": {
+          "name": {"type": "string", "minLength": 1},
+          "type": {"type": "string", "enum": ["malicious", "benign"]},
+          "expected": {"type": "string", "minLength": 1},
+          "event_ids": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {"type": "string", "minLength": 1}
+          }
+        },
+        "additionalProperties": false
+      },
+      "allOf": [
+        {"contains": {"type": "object", "properties": {"type": {"const": "malicious"}}, "required": ["type"]}},
+        {"contains": {"type": "object", "properties": {"type": {"const": "benign"}}, "required": ["type"]}}
+      ]
+    },
+    "limitations": {"type": "string", "minLength": 1}
+  },
+  "$defs": {
+    "nonempty_string_array": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "attack_mapping": {
+      "type": "object",
+      "required": ["technique", "evidence", "confidence", "status", "additional_evidence"],
+      "properties": {
+        "technique": {
+          "type": "string",
+          "pattern": "^T[0-9]{4}(?:\\.[0-9]{3})?$"
+        },
+        "evidence": {"type": "string", "minLength": 1},
+        "confidence": {"type": "string", "enum": ["low", "medium", "high"]},
+        "status": {"type": "string", "enum": ["observed", "inferred", "possible_risk"]},
+        "additional_evidence": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "unmapped_attack_assessment": {
+      "type": "object",
+      "required": ["mapping_status", "rationale", "additional_evidence"],
+      "properties": {
+        "mapping_status": {"const": "not_mapped"},
+        "rationale": {"type": "string", "minLength": 1},
+        "additional_evidence": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

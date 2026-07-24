@@ -1,0 +1,36 @@
+id: DET010
+name: Identity-Led Incident Fusion
+status: test
+description: Correlates unique email, authentication, cloud, mailbox, endpoint, and network signals by account and time.
+author: Mahi
+date_created: "2026-07-23"
+date_modified: "2026-07-23"
+severity: high
+severity_rationale: Multiple independent high-impact signals tied to one identity can represent material cross-control compromise.
+confidence: high
+confidence_rationale: High confidence requires at least six categories and seven unique detections, with each detection contributing weight once.
+data_sources: [Microsoft Sentinel SecurityAlert, detection risk model]
+query_file: detections/kql/DET010-identity-incident-fusion.kql
+query_frequency: 15m
+query_period: 4h
+trigger_operator: greater_than_or_equal
+trigger_threshold: 1
+entity_mappings: [Account.Name, IP.Address, Host.DeviceId, Application.Name, Application.AppId, URL.Domain, URL.Url, Mailbox.MailboxOwnerUPN, Process.ProcessName]
+attack:
+  - mapping_status: not_mapped
+    rationale: Incident fusion is an analytic correlation mechanism, not adversary behaviour; ATT&CK assertions remain on evidence-bearing constituent detections.
+    additional_evidence: Review the linked rules and their underlying events before carrying any constituent technique into an incident assessment.
+false_positives: [Multiple independent benign changes affecting one travelling or migrating user]
+tuning: Tune weights, category threshold, entity matching, and correlation window using tenant evidence.
+investigation_steps: [Validate each constituent alert and test whether one benign explanation accounts for the chain.]
+response_actions: [Escalate for human-approved containment when independent high-impact signals remain unexplained.]
+test_cases:
+  - name: seven-category identity-led chain
+    type: malicious
+    expected: high_confidence_incident
+    event_ids: [E-EMAIL-001, E-AUTH-001, E-AUTH-002, E-AUTH-003, E-AUTH-004, E-AUTH-005, E-AUTH-006, E-AUTH-007, E-CLOUD-001, E-CLOUD-002, E-CLOUD-003, E-CLOUD-004, E-CLOUD-005, E-CLOUD-006, E-CLOUD-007, E-CLOUD-008, E-CLOUD-009, E-CLOUD-010, E-CLOUD-011, E-END-001, E-DNS-001]
+  - name: benign multi-source activity
+    type: benign
+    expected: no_incident
+    event_ids: [E-AUTH-008, E-EMAIL-002, E-CLOUD-032, E-END-003, E-DNS-003]
+limitations: Native KQL requires reliable custom details and normalised entity mapping from upstream rules.

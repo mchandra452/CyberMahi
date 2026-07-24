@@ -1,0 +1,38 @@
+id: DET003
+name: Unusual Authentication Context
+status: test
+description: Detects elevated-risk successful authentication from a country or device absent from a user baseline.
+author: Mahi
+date_created: "2026-07-23"
+date_modified: "2026-07-23"
+severity: medium
+severity_rationale: Elevated-risk use from a new context warrants review, but context change alone does not establish compromise.
+confidence: medium
+confidence_rationale: Static country and device baselines provide useful corroboration but cannot model all VPN, travel, roaming, or device changes.
+data_sources: [Microsoft Entra ID SigninLogs, static user baseline]
+query_file: detections/kql/DET003-unusual-authentication-context.kql
+query_frequency: 15m
+query_period: 1d
+trigger_operator: greater_than_or_equal
+trigger_threshold: 1
+entity_mappings: [Account.UserPrincipalName, IP.Address, Host.DeviceId]
+attack:
+  - technique: T1078.004
+    evidence: Valid cloud account use is inferred only when new context and elevated risk corroborate it.
+    confidence: medium
+    status: inferred
+    additional_evidence: Confirm travel, VPN, device ownership, session properties, and user intent.
+false_positives: [Corporate VPN, travel, mobile networks, proxies, short baselines]
+tuning: Maintain VPN ranges and require sufficient baseline age before enabling.
+investigation_steps: [Review sign-in risk, device registration, IP ownership, and recent travel.]
+response_actions: [Challenge or contain the identity only after contextual validation.]
+test_cases:
+  - name: risky first-seen country and device
+    type: malicious
+    expected: alert
+    event_ids: [E-AUTH-007]
+  - name: approved VPN travel
+    type: benign
+    expected: suppressed
+    event_ids: [E-AUTH-013]
+limitations: Offline baselines are static and cannot establish impossible travel.

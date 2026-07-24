@@ -1,0 +1,36 @@
+id: DET009
+name: New or Rare Domain DNS Activity
+status: test
+description: Detects successful DNS activity for a domain absent from a device baseline and rare today.
+author: Mahi
+date_created: "2026-07-23"
+date_modified: "2026-07-23"
+severity: low
+severity_rationale: Domain novelty is a weak signal that should enrich a chain rather than independently drive containment.
+confidence: medium
+confidence_rationale: Device-local rarity is deterministic, but offline data lacks registration age, reputation, and global prevalence.
+data_sources: [Microsoft Defender for Endpoint DeviceNetworkEvents]
+query_file: detections/kql/DET009-new-domain-dns-activity.kql
+query_frequency: 1h
+query_period: 1d
+trigger_operator: greater_than_or_equal
+trigger_threshold: 1
+entity_mappings: [Host.DeviceId, Account.UserPrincipalName, URL.Domain]
+attack:
+  - mapping_status: not_mapped
+    rationale: A new or rare DNS name is not a specific adversary technique without process intent or follow-on network behaviour.
+    additional_evidence: Obtain process ancestry, connection outcomes, domain reputation and age, global prevalence, and correlated endpoint activity before assigning a technique.
+false_positives: [Software updates, CDNs, newly onboarded SaaS, sparse baseline]
+tuning: Maintain domain allowlists and correlate with process, identity, and email evidence.
+investigation_steps: [Review process origin, resolver response, prevalence, first seen, and related incidents.]
+response_actions: [Do not block solely on novelty; escalate when independent signals corroborate it.]
+test_cases:
+  - name: safe suspicious domain in incident chain
+    type: malicious
+    expected: alert
+    event_ids: [E-DNS-001]
+  - name: newly approved SaaS domain
+    type: benign
+    expected: accepted_false_positive
+    event_ids: [E-DNS-002]
+limitations: Offline mode has no registration age, reputation, or global popularity enrichment.

@@ -1,0 +1,15 @@
+policy: Synthetic indicators only; no entry should resolve to a real malicious host.
+allowed_domain_suffixes:
+  - .example
+  - .test
+  - .invalid
+allowed_ipv4_ranges:
+  - 192.0.2.0/24
+  - 198.51.100.0/24
+  - 203.0.113.0/24
+suspicious_domains:
+  - microsoft-auth-check.example
+  - update-cdn.test
+  - fileshare-login.invalid
+sample_hashes:
+  - SAMPLE-SHA256-NOT-A-REAL-HASH-0000000000000000000000000000000000000000

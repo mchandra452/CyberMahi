@@ -1,0 +1,38 @@
+id: DET004
+name: Phishing-Link Indicators
+status: test
+description: Detects a delivered message with display mismatch and safe suspicious-link indicators.
+author: Mahi
+date_created: "2026-07-23"
+date_modified: "2026-07-23"
+severity: medium
+severity_rationale: A delivered deceptive link exposes a recipient but does not by itself show a click, credential entry, or execution.
+confidence: high
+confidence_rationale: Delivery, display mismatch, and a governed suspicious test domain jointly support the phishing-link hypothesis.
+data_sources: [Microsoft Defender for Office 365 EmailEvents, EmailUrlInfo]
+query_file: detections/kql/DET004-phishing-link-indicators.kql
+query_frequency: 15m
+query_period: 1d
+trigger_operator: greater_than_or_equal
+trigger_threshold: 1
+entity_mappings: [Account.RecipientEmailAddress, URL.Url, URL.Domain]
+attack:
+  - technique: T1566.002
+    evidence: A delivered synthetic email contains a deceptive safe test link.
+    confidence: high
+    status: observed
+    additional_evidence: Click and post-delivery authentication telemetry establish impact.
+false_positives: [Marketing redirects, Safe Links rewriting, delegated senders]
+tuning: Normalise rewritten URLs and use governed sender/domain allowlists.
+investigation_steps: [Inspect headers, delivery action, URL chain, recipients, and click events.]
+response_actions: [Quarantine only through approved mail-security procedure and scope recipients.]
+test_cases:
+  - name: delivered deceptive test link
+    type: malicious
+    expected: alert
+    event_ids: [E-EMAIL-001]
+  - name: benign delivery, sender, and blocking controls
+    type: benign
+    expected: no_alert
+    event_ids: [E-EMAIL-002, E-EMAIL-003, E-EMAIL-004, E-EMAIL-005]
+limitations: Offline logic lacks live reputation, detonation, and click enrichment.

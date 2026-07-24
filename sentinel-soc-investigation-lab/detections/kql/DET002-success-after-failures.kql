@@ -1,0 +1,24 @@
+// DET002: success for an account after a bounded burst of failures.
+// Stale clients and user typos are expected tuning cases; inspect Conditional Access status.
+// ASIM design note: _Im_Authentication can replace SigninLogs after mapping event result,
+// target username, source IP, application, and Conditional Access fields in the local tenant.
+let DetectionId = "DET002";
+let Lookback = 1h;
+let FailureWindow = 15m;
+let MinimumFailures = 3;
+let Failures = SigninLogs
+| where TimeGenerated > ago(Lookback)
+| where ResultType != 0
+| project FailureTime=TimeGenerated, User=UserPrincipalName, FailureIP=IPAddress, ResultType;
+let Successes = SigninLogs
+| where TimeGenerated > ago(Lookback)
+| where ResultType == 0
+| project Timestamp=TimeGenerated, User=UserPrincipalName, IPAddress, AppDisplayName, ConditionalAccessStatus;
+Successes
+| join kind=inner (Failures) on User
+| where FailureTime between (Timestamp - FailureWindow .. Timestamp)
+| summarize FailureCount=count(), FailureIPs=make_set(FailureIP, 20), FirstFailure=min(FailureTime)
+    by Timestamp, User, IPAddress, AppDisplayName, ConditionalAccessStatus
+| where FailureCount >= MinimumFailures
+| extend Evidence=strcat("Success followed ", FailureCount, " failures")
+| project DetectionId, Timestamp, User, IPAddress, AppDisplayName, ConditionalAccessStatus, FailureCount, FailureIPs, FirstFailure, Evidence

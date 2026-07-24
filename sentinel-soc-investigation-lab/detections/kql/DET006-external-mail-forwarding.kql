@@ -1,0 +1,15 @@
+// DET006: creation or modification of an external mailbox forwarding rule.
+// Confirm shared mailbox, transport rule, admin action, and approved business forwarding.
+let DetectionId = "DET006";
+let Lookback = 1d;
+let InternalDomains = dynamic(["northbridge.example"]);
+OfficeActivity
+| where TimeGenerated > ago(Lookback)
+| where OfficeWorkload == "Exchange"
+| where Operation in ("New-InboxRule", "Set-InboxRule", "Set-Mailbox")
+| extend ForwardingAddress=tolower(coalesce(tostring(Parameters["ForwardTo"]), tostring(Parameters["ForwardingSmtpAddress"])))
+| extend ForwardingDomain=extract(@"@([^;>]+)", 1, ForwardingAddress)
+| where isnotempty(ForwardingDomain) and ForwardingDomain !in (InternalDomains)
+| extend Timestamp=TimeGenerated, User=UserId, IPAddress=ClientIP,
+    Evidence=strcat("External forwarding configured to domain ", ForwardingDomain)
+| project DetectionId, Timestamp, User, IPAddress, MailboxOwnerUPN, Operation, ForwardingAddress, ForwardingDomain, Evidence

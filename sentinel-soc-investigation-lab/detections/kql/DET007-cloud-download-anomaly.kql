@@ -1,0 +1,23 @@
+// DET007: current download volume materially exceeds a bounded historical user baseline.
+// Exclude governed backup, migration, eDiscovery, and legal export identities before enabling.
+let DetectionId = "DET007";
+let DetectionWindow = 1d;
+let BaselineWindow = 14d;
+let MinimumDownloads = 8;
+let Multiplier = 3.0;
+let Baseline = OfficeActivity
+| where TimeGenerated between (ago(BaselineWindow) .. ago(DetectionWindow))
+| where Operation in ("FileDownloaded", "FileSyncDownloadedFull")
+| summarize DailyDownloads=count() by UserId, bin(TimeGenerated, 1d)
+| summarize BaselineDownloads=avg(DailyDownloads) by UserId;
+OfficeActivity
+| where TimeGenerated > ago(DetectionWindow)
+| where Operation in ("FileDownloaded", "FileSyncDownloadedFull")
+| summarize DownloadCount=count(), UniqueFiles=dcount(SourceFileName), FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated),
+    IPAddresses=make_set(ClientIP, 20) by UserId
+| join kind=leftouter Baseline on UserId
+| extend BaselineDownloads=coalesce(BaselineDownloads, 1.0)
+| where DownloadCount >= MinimumDownloads and DownloadCount >= BaselineDownloads * Multiplier
+| extend Timestamp=LastSeen, User=UserId, IPAddress=tostring(IPAddresses[0]),
+    Evidence=strcat(DownloadCount, " downloads versus baseline ", round(BaselineDownloads, 1))
+| project DetectionId, Timestamp, User, IPAddress, DownloadCount, UniqueFiles, BaselineDownloads, FirstSeen, LastSeen, Evidence

@@ -1,0 +1,22 @@
+// DET005: first-seen application granted high-impact scopes by an unapproved actor.
+// Consent is not evidence of token theft; verify publisher, actor, service principal, and use.
+let DetectionId = "DET005";
+let Lookback = 1d;
+let BaselineWindow = 30d;
+let HighImpactScopes = dynamic(["Mail.ReadWrite", "Files.ReadWrite.All", "offline_access"]);
+let ApprovedAdmins = dynamic(["cloud-admin@northbridge.example"]); // Prefer a governed watchlist.
+let KnownApps = AuditLogs
+| where TimeGenerated between (ago(BaselineWindow) .. ago(Lookback))
+| where OperationName in ("Consent to application", "Add delegated permission grant")
+| summarize by AppId=tostring(TargetResources[0].id);
+AuditLogs
+| where TimeGenerated > ago(Lookback)
+| where OperationName in ("Consent to application", "Add delegated permission grant")
+| extend User=tostring(InitiatedBy.user.userPrincipalName), AppId=tostring(TargetResources[0].id),
+    Application=tostring(TargetResources[0].displayName), Scopes=tostring(TargetResources[0].modifiedProperties[0].newValue)
+| where User !in (ApprovedAdmins)
+| where Scopes has_any (HighImpactScopes)
+| join kind=leftanti KnownApps on AppId
+| extend Timestamp=TimeGenerated, IPAddress=tostring(InitiatedBy.user.ipAddress),
+    Evidence=strcat("First-seen app granted high-impact scope set: ", Scopes)
+| project DetectionId, Timestamp, User, IPAddress, AppId, Application, Scopes, OperationName, Evidence
