@@ -10,7 +10,7 @@ This defensive lab models a multi-source investigation at fictional Northbridge 
 
 The project demonstrates hands-on detection engineering, threat hunting, correlation, regression testing, and incident response without claiming production deployment or live-tenant coverage.
 
-## 60-second offline quick start
+## Simple offline quick start
 
 Prerequisites: Git, Python 3.11 or newer, and internet access for the first dependency install. Offline mode does not require Azure, a Microsoft tenant, Sentinel connectors, or environment activation.
 
