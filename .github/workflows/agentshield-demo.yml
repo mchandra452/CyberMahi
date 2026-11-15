@@ -4,7 +4,15 @@ on:
   push:
     paths:
       - 'projects/AgentShield-Lab/**'
+      - '.github/workflows/agentshield-demo.yml'
+  pull_request:
+    paths:
+      - 'projects/AgentShield-Lab/**'
+      - '.github/workflows/agentshield-demo.yml'
   workflow_dispatch:
+
+permissions:
+  contents: read
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -23,7 +31,7 @@ jobs:
 
       - name: Run demo
         working-directory: projects/AgentShield-Lab
-        run: python main.py --demo
+        run: python main.py --demo --report
 
       - name: Run tests
         working-directory: projects/AgentShield-Lab

@@ -9,7 +9,7 @@ AgentShield is a **local Python demonstration of static prompt-pattern detection
 ```bash
 git clone https://github.com/mchandra452/CyberMahi.git
 cd CyberMahi/projects/AgentShield-Lab
-python main.py --demo
+python main.py --demo --report
 python -m unittest discover -s tests
 ```
 
@@ -23,6 +23,8 @@ streamlit run dashboard.py
 ```
 
 The CLI and unit tests use Python's standard library. Streamlit is optional.
+
+The demo scans four synthetic prompts and shows each matching rule and its risk score. The default alert log at `logs/generated_alerts.jsonl` accumulates matches across runs. Each run with `--report` writes a fresh Markdown summary to `reports/demo_report.md` and JSON and CSV summaries to `logs/reports/`.
 
 ## Implemented components
 

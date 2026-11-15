@@ -1,6 +1,11 @@
 # CyberMahi Security Engineering Labs
 
-CyberMahi contains practical defensive engineering labs with reproducible local workflows and explicit testing boundaries. The projects focus on what can be demonstrated through code, evidence and tests rather than production-security claims.
+CyberMahi contains two defensive security labs that run locally with synthetic inputs.
+
+| Project | Start here |
+| --- | --- |
+| Microsoft Sentinel | [Investigation report](sentinel-soc-investigation-lab/artifacts/example/investigation-report.md) · [Detection catalog](sentinel-soc-investigation-lab/docs/detection-catalog.md) |
+| AgentShield | [Demo](projects/AgentShield-Lab/README.md#quick-start) · [Detection rules](projects/AgentShield-Lab/detection/detection_rules.json) |
 
 ## Microsoft Sentinel detection engineering lab
 

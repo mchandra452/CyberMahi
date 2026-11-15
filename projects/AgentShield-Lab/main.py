@@ -65,22 +65,14 @@ def write_alerts(alerts: List[Dict], output_path: Path = ALERT_LOG_FILE) -> None
     if not alerts:
         return
 
-    output_path.parent.mkdir(exist_ok=True)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
     with open(output_path, "a", encoding="utf-8") as file:
         for alert in alerts:
             file.write(json.dumps(alert) + "\n")
 
 
-def generate_report(log_path: Path, report_dir: Path) -> Dict[str, Path]:
+def generate_report(alerts: List[Dict], report_dir: Path) -> Dict[str, Path]:
     report_dir.mkdir(parents=True, exist_ok=True)
-
-    alerts = []
-    if log_path.exists():
-        with open(log_path, "r", encoding="utf-8") as file:
-            for line in file:
-                line = line.strip()
-                if line:
-                    alerts.append(json.loads(line))
 
     sev_counts = defaultdict(int)
     rule_counts = defaultdict(int)
@@ -217,6 +209,6 @@ if __name__ == "__main__":
             session["alerts"],
         )
         print(f"Markdown report: {report_path}")
-        paths = generate_report(output_path, Path(args.report_dir))
+        paths = generate_report(session["alerts"], Path(args.report_dir))
         print(f"Report JSON: {paths['json']}")
         print(f"Report CSV: {paths['csv']}")
