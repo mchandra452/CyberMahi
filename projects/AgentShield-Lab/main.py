@@ -51,7 +51,8 @@ def analyze_prompt(prompt: str, rules: List[Dict], min_risk_score: int = 0) -> L
                     "severity": rule.get("severity"),
                     "risk_score": rule.get("risk_score"),
                     "matched_patterns": matched_patterns,
-                    "input_sample": prompt,
+                    "input_sample": "[REDACTED]",
+                    "input_length": len(prompt),
                     "mapped_risk": rule.get("mapped_risk"),
                     "recommended_action": rule.get("recommended_action"),
                 }
@@ -64,22 +65,14 @@ def write_alerts(alerts: List[Dict], output_path: Path = ALERT_LOG_FILE) -> None
     if not alerts:
         return
 
-    output_path.parent.mkdir(exist_ok=True)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
     with open(output_path, "a", encoding="utf-8") as file:
         for alert in alerts:
             file.write(json.dumps(alert) + "\n")
 
 
-def generate_report(log_path: Path, report_dir: Path) -> Dict[str, Path]:
+def generate_report(alerts: List[Dict], report_dir: Path) -> Dict[str, Path]:
     report_dir.mkdir(parents=True, exist_ok=True)
-
-    alerts = []
-    if log_path.exists():
-        with open(log_path, "r", encoding="utf-8") as file:
-            for line in file:
-                line = line.strip()
-                if line:
-                    alerts.append(json.loads(line))
 
     sev_counts = defaultdict(int)
     rule_counts = defaultdict(int)
@@ -140,7 +133,7 @@ def run_demo(min_risk_score: int, output_path: Path) -> Dict:
     all_alerts: List[Dict] = []
     print("AgentShield Lab - Demo Run\n")
     for index, prompt in enumerate(demo_prompts, start=1):
-        print(f"Test {index}: {prompt}")
+        print(f"Test {index}: synthetic example")
         alerts = analyze_prompt(prompt, rules, min_risk_score=min_risk_score)
         all_alerts.extend(alerts)
         write_alerts(alerts, output_path=output_path)
@@ -182,7 +175,7 @@ def run_file_scan(file_path: Path, min_risk_score: int, output_path: Path) -> Di
 
     all_alerts: List[Dict] = []
     for index, prompt in enumerate(prompts, start=1):
-        print(f"Prompt {index}: {prompt}")
+        print(f"Prompt {index}: [content withheld]")
         alerts = analyze_prompt(prompt, rules, min_risk_score=min_risk_score)
         all_alerts.extend(alerts)
         write_alerts(alerts, output_path=output_path)
@@ -216,6 +209,6 @@ if __name__ == "__main__":
             session["alerts"],
         )
         print(f"Markdown report: {report_path}")
-        paths = generate_report(output_path, Path(args.report_dir))
+        paths = generate_report(session["alerts"], Path(args.report_dir))
         print(f"Report JSON: {paths['json']}")
         print(f"Report CSV: {paths['csv']}")

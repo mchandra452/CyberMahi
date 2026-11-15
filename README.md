@@ -1,6 +1,11 @@
 # CyberMahi Security Engineering Labs
 
-CyberMahi contains defensive security engineering projects with reproducible local workflows, synthetic evidence, and automated checks.
+CyberMahi contains two defensive security labs that run locally with synthetic inputs.
+
+| Project | Start here |
+| --- | --- |
+| Microsoft Sentinel | [Investigation report](sentinel-soc-investigation-lab/artifacts/example/investigation-report.md) · [Detection catalog](sentinel-soc-investigation-lab/docs/detection-catalog.md) |
+| AgentShield | [Demo](projects/AgentShield-Lab/README.md#quick-start) · [Detection rules](projects/AgentShield-Lab/detection/detection_rules.json) |
 
 ## Microsoft Sentinel detection engineering lab
 
@@ -28,6 +33,15 @@ The runner creates an isolated `.venv` on first use, installs the project, valid
 
 ## AgentShield lab
 
-The [AgentShield lab](projects/AgentShield-Lab/README.md) is a controlled AI security testing framework covering prompt injection, tool abuse, data exposure, insecure output handling, and denial-of-service-style prompt attacks.
+The [AgentShield lab](projects/AgentShield-Lab/README.md) is an intentionally limited rule-based Python prototype: phrase matching, static risk labels, redacted alert logs and basic unit tests. It does not run or secure a real LLM agent.
+
+## Evidence and limitations
+
+| Project | Verified through local code and tests | Not established |
+| --- | --- | --- |
+| Sentinel | Synthetic telemetry analysis, incident correlation, test fixtures and CI | Live KQL execution, real connector mappings, production accuracy |
+| AgentShield | Configured phrase matches, CLI logs, basic tests and privacy regression tests | Robust prompt-injection detection, actual AI agent/tool enforcement |
+
+The Sentinel lab includes an [engineering decisions log](sentinel-soc-investigation-lab/docs/engineering-decisions.md) and [live-validation evidence checklist](sentinel-soc-investigation-lab/docs/validation-evidence-checklist.md). Test results and engineering limitations are reported separately from proposed future improvements.
 
 All projects are designed for authorised, defensive testing. Review each project's security and limitations documentation before adapting it.
