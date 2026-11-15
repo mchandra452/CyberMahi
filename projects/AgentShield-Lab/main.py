@@ -51,7 +51,8 @@ def analyze_prompt(prompt: str, rules: List[Dict], min_risk_score: int = 0) -> L
                     "severity": rule.get("severity"),
                     "risk_score": rule.get("risk_score"),
                     "matched_patterns": matched_patterns,
-                    "input_sample": prompt,
+                    "input_sample": "[REDACTED]",
+                    "input_length": len(prompt),
                     "mapped_risk": rule.get("mapped_risk"),
                     "recommended_action": rule.get("recommended_action"),
                 }
@@ -140,7 +141,7 @@ def run_demo(min_risk_score: int, output_path: Path) -> Dict:
     all_alerts: List[Dict] = []
     print("AgentShield Lab - Demo Run\n")
     for index, prompt in enumerate(demo_prompts, start=1):
-        print(f"Test {index}: {prompt}")
+        print(f"Test {index}: synthetic example")
         alerts = analyze_prompt(prompt, rules, min_risk_score=min_risk_score)
         all_alerts.extend(alerts)
         write_alerts(alerts, output_path=output_path)
@@ -182,7 +183,7 @@ def run_file_scan(file_path: Path, min_risk_score: int, output_path: Path) -> Di
 
     all_alerts: List[Dict] = []
     for index, prompt in enumerate(prompts, start=1):
-        print(f"Prompt {index}: {prompt}")
+        print(f"Prompt {index}: [content withheld]")
         alerts = analyze_prompt(prompt, rules, min_risk_score=min_risk_score)
         all_alerts.extend(alerts)
         write_alerts(alerts, output_path=output_path)
