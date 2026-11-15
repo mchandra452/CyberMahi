@@ -145,6 +145,10 @@ artifacts/example/  deterministic generated evidence
 .github/            project templates; active CI is at the monorepo root
 ```
 
+## Next validation milestone
+
+Use the [live-validation evidence checklist](docs/validation-evidence-checklist.md) to capture a real query run, field/schema findings, a benign control case, one tuning iteration, and costs when an authorised Microsoft tenant is available. **This evidence has not been collected yet**; offline Python equivalents and CI do not demonstrate live KQL correctness.
+
 ## Sentinel deployment path
 
 Use the [Sentinel deployment guide](docs/sentinel-deployment.md) to map fields, onboard connectors, test KQL, configure analytics/entity mapping, and validate incidents in the Microsoft Defender portal. Nothing in this repository deploys to or modifies a tenant.
