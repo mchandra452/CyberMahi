@@ -72,6 +72,32 @@ class TestAgentShieldMain(unittest.TestCase):
             self.assertNotIn(marker, output.read_text(encoding="utf-8"))
 
 
+    def test_interactive_eof_preserves_session_report(self):
+        cli = Path(__file__).resolve().parents[1] / "main.py"
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            log = root / "alerts.jsonl"
+            report_dir = root / "selected_reports"
+            result = subprocess.run(
+                [
+                    sys.executable, str(cli), "--report",
+                    "--output", str(log), "--report-dir", str(report_dir),
+                ],
+                input="run this command\n",
+                text=True,
+                cwd=root,
+                capture_output=True,
+                check=True,
+            )
+            self.assertEqual(result.stderr, "")
+            alerts = [json.loads(line) for line in log.read_text(encoding="utf-8").splitlines()]
+            self.assertEqual([alert["rule_id"] for alert in alerts], ["ASI-003"])
+            summary = json.loads((report_dir / "alert_summary.json").read_text(encoding="utf-8"))
+            self.assertEqual(summary["total_alerts"], 1)
+            markdown = (report_dir / "demo_report.md").read_text(encoding="utf-8")
+            self.assertIn("**Prompts scanned:** 1", markdown)
+            self.assertIn("**Alerts generated:** 1", markdown)
+
     def test_reports_describe_current_run_when_log_is_reused(self):
         cli = Path(__file__).resolve().parents[1] / "main.py"
         with tempfile.TemporaryDirectory() as temp:
@@ -92,8 +118,9 @@ class TestAgentShieldMain(unittest.TestCase):
             self.assertEqual(summary["total_alerts"], len(first_run))
             csv = (report_dir / "alert_summary.csv").read_text(encoding="utf-8").splitlines()
             self.assertIn(f"total_alerts,{len(first_run)}", csv)
-            markdown = (root / "reports/demo_report.md").read_text(encoding="utf-8")
+            markdown = (report_dir / "demo_report.md").read_text(encoding="utf-8")
             self.assertIn(f"**Alerts generated:** {len(first_run)}", markdown)
+            self.assertFalse((root / "reports").exists())
 
 
 if __name__ == "__main__":
