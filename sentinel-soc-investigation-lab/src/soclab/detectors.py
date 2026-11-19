@@ -296,18 +296,28 @@ def detect_download_anomaly(events: list[Event], context: dict) -> list[Finding]
             grouped[(event.scenario_id, event.user)].append(event)
     for (_, user), group in sorted(grouped.items()):
         normal = int(baselines.get(user, {}).get("daily_download_count", 2))
-        if len(group) >= max(8, normal * 3):
+        threshold = max(8, normal * 3)
+        group = sorted(group, key=lambda item: (item.timestamp, item.event_id))
+        for start in group:
+            window = [
+                item
+                for item in group
+                if start.timestamp <= item.timestamp < start.timestamp + timedelta(days=1)
+            ]
+            if len(window) < threshold:
+                continue
             findings.append(
                 _finding(
                     "DET007",
                     len(findings) + 1,
-                    group,
+                    window,
                     "medium",
                     "medium",
                     "cloud_storage",
-                    f"{len(group)} downloads exceed static daily baseline of {normal} for {user}",
+                    f"{len(window)} downloads exceed static daily baseline of {normal} for {user}",
                 )
             )
+            break
     return findings
 
 

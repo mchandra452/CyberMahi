@@ -150,7 +150,11 @@ def run_interactive(min_risk_score: int, output_path: Path) -> Dict:
     print("Type a prompt to test. Type 'exit' to quit.\n")
 
     while True:
-        prompt = input("Enter prompt: ").strip()
+        try:
+            prompt = input("Enter prompt: ").strip()
+        except EOFError:
+            print("\nExiting AgentShield Lab.")
+            break
 
         if prompt.lower() in {"exit", "quit"}:
             print("Exiting AgentShield Lab.")
@@ -189,7 +193,7 @@ if __name__ == "__main__":
     parser.add_argument("--file", help="Scan prompts from a file (one prompt per line)")
     parser.add_argument("--min-risk-score", type=int, default=0, help="Only emit alerts at or above this risk score")
     parser.add_argument("--output", default=str(ALERT_LOG_FILE), help="Path to JSONL alert output")
-    parser.add_argument("--report", action="store_true", help="Generate markdown report for analysts")
+    parser.add_argument("--report", action="store_true", help="Generate Markdown, JSON and CSV summaries")
     parser.add_argument("--report-dir", default=str(LOG_DIR / "reports"), help="Directory for generated reports")
     args = parser.parse_args()
 
@@ -203,12 +207,13 @@ if __name__ == "__main__":
         session = run_interactive(args.min_risk_score, output_path)
 
     if args.report:
+        report_dir = Path(args.report_dir)
         report_path = write_markdown_report(
-            Path("reports/demo_report.md"),
+            report_dir / "demo_report.md",
             session["prompts_scanned"],
             session["alerts"],
         )
         print(f"Markdown report: {report_path}")
-        paths = generate_report(session["alerts"], Path(args.report_dir))
+        paths = generate_report(session["alerts"], report_dir)
         print(f"Report JSON: {paths['json']}")
         print(f"Report CSV: {paths['csv']}")

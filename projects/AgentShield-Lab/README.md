@@ -24,7 +24,9 @@ streamlit run dashboard.py
 
 The CLI and unit tests use Python's standard library. Streamlit is optional.
 
-The demo scans four synthetic prompts and shows each matching rule and its risk score. The default alert log at `logs/generated_alerts.jsonl` accumulates matches across runs. Each run with `--report` writes a fresh Markdown summary to `reports/demo_report.md` and JSON and CSV summaries to `logs/reports/`.
+The demo scans four synthetic prompts and shows each matching rule and its risk score. The default alert log at `logs/generated_alerts.jsonl` accumulates matches across runs. Each run with `--report` writes fresh Markdown, JSON and CSV summaries to `logs/reports/`. Use `--report-dir path/to/reports` to place all three summaries in a chosen folder.
+
+Run `python main.py --report` for interactive analysis. Type `exit` or close standard input to finish the session and write its reports.
 
 ## Implemented components
 
